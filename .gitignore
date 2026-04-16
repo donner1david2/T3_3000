@@ -11,12 +11,11 @@
 *.bbl-SAVE-ERROR
 *.aux
 *.fls
+*.out
 
-master.synctex.gz
-master.synctex
-master.synctex(busy)
-master.pdf
-master.run.xml
-master.tdo
-N-Sym-Cycles.webp
-neuroSCycle.png
+t3_3000.synctex.gz
+t3_3000.synctex
+t3_3000.synctex(busy)
+t3_3000.pdf
+t3_3000.run.xml
+t3_3000.tdo

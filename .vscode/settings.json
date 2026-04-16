@@ -1,0 +1,40 @@
+{
+    "cSpell.words": [
+        "BIBLATEX",
+        "Mycrotype",
+        "Theoriesemester"
+    ],
+
+"latex-workshop.latex.recipes": [
+  {
+    "name": "lualatex -> biber -> lualatex*2",
+    "tools": [
+      "lualatex",
+      "biber",
+      "lualatex",
+      "lualatex"
+    ]
+  }
+],
+"latex-workshop.latex.tools": [
+  {
+    "name": "lualatex",
+    "command": "lualatex",
+    "args": [
+      "-synctex=1",
+      "-interaction=nonstopmode",
+      "-file-line-error",
+      "--shell-escape",
+      "%DOC%"
+    ]
+  },
+  {
+    "name": "biber",
+    "command": "biber",
+    "args": [
+      "%DOCFILE%"
+    ]
+  }
+]
+
+}
