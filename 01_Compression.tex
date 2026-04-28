@@ -4,7 +4,7 @@
 
 Die Realisierung einer stabilen Videoaufnahme auf einem Ubuntu-basierten System erfordert eine performante Interaktion zwischen Hardware und Software. Der Zugriff auf USB-basierte Videoquellen wird primär über die Video4Linux (V4L2) Schnittstelle gesteuert,
 welche die standardisierte Kommunikation zwischen dem Betriebssystemkern und den Anwendungen im Userspace ermöglicht \parencite{_2020_part}. Da die hohen Datenraten unkomprimierter Videostreams die 
-Systemressourcen des \enquote{HB10} bei gleichzeitiger Ausführung anderer Prozesse überlasten könnten, ist eine effiziente Komprimierung der Daten unumgänglich.\newline
+Systemressourcen des \enquote{HB10} bei gleichzeitiger Ausführung anderer Prozesse auslasten könnten, ist eine effiziente Komprimierung der Daten notwendig.\newline
 
 Zur Minimierung der Prozessorlast und des Arbeitsspeicherverbrauchs bieten sich hardwaregestützte Kodierungsverfahren an. Diese verlagern die rechenintensiven Kompressionsalgorithmen vom Hauptprozessor auf 
 dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im Kontext der im System eingesetzten AMD Ryzen Embedded R1000 Prozessoren relevant, 
