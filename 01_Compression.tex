@@ -1,6 +1,6 @@
 % !TeX root = t3_3000.tex
         
-\section{Video- Aufnahme und Komprimierung}
+\section{Video- Aufnahme und Komprimierung} \label{sec:1}
 
 Die Realisierung einer stabilen Videoaufnahme auf einem Ubuntu-basierten System erfordert eine performante Interaktion zwischen Hardware und Software. Der Zugriff auf USB-basierte Videoquellen wird primär über die Video4Linux (V4L2) Schnittstelle gesteuert,
 welche die standardisierte Kommunikation zwischen dem Betriebssystemkern und den Anwendungen im Userspace ermöglicht \parencite{_2020_part}. Da die hohen Datenraten unkomprimierter Videostreams die 
@@ -11,7 +11,15 @@ dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im 
 da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügen \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Im Folgenden werden die technischen Grundlagen des 
 Kamerazugriffs sowie die Auswahl geeigneter Kompressionsverfahren unter Berücksichtigung der Hardwarebeschleunigung erläutert.
 
-\subsection{Kamera als Videoquelle}
+\subsection{Kamera als Videoquelle} \label{sec:camera}
+
+Der Zugriff auf externe Kameras unter \enquote{Ubuntu} erfolgt standardmäßig über die \enquote{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
+erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \enquote{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}.\newline
+
+\enquote{FFmpeg} dient als Abstraktionsebene für V4L und vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Ein entscheidender Vorteil bei der Nutzung von \enquote{FFmpeg} ist die 
+einfache Einbindung von kamerasunterstützten Kompressionsverfahren. Viele moderne Kameras unterstützen Formate wie \enquote{MJPEG} oder \enquote{H.264} direkt in der Hardware. Durch die Verwendung 
+entsprechender Parameter in \enquote{FFmpeg} können diese bereits komprimierten Datenströme ohne vorherige Dekodierung übernommen werden. Dies schont die Ressourcen der CPU und des Arbeitsspeichers, 
+da das System die Videodaten nicht erst rechenintensiv verarbeiten muss, bevor sie für die weitere Verwendung bereitgestellt werden können.
 
 \subsection{Komprimierungsalgorithmen}
 
