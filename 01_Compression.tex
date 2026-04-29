@@ -21,15 +21,22 @@ einfache Einbindung von den von Kameras unterstützten Kompressionsverfahren. Vi
 entsprechender Parameter in \enquote{FFmpeg} können diese bereits komprimierten Datenströme ohne vorherige Dekodierung übernommen werden. Dies schont die Ressourcen der CPU und des Arbeitsspeichers, 
 da das System die Videodaten nicht erst rechenintensiv verarbeiten muss, bevor sie für die weitere Verwendung bereitgestellt werden können.
 
-\subsection{Komprimierungsalgorithmen}
+\subsection{Komprimierungsalgorithmen} \label{sec:compression}
 
-Beim Videocodierung gibt es verschieden arten der Komprimierung. Es wird zwischen intraframe und interframe Komprimierung unterschieden. Bei der intraframe Komprimierung wird auf jeden einzelnen Frame ein
+Beim Videocodierung gibt es verschieden arten der Komprimierung. Es wird zwischen intraframe und interframe Komprimierung unterschieden.\newline
+
+Bei der intraframe Komprimierung wird auf jeden einzelnen Frame ein
 Komprimierungsalgorithmus angewendet. Bei verlustloser intraframe Komprimierung werden dann beispielsweise Speichernutzung verringert, indem große Bereiche mit identischer Farbe nicht für jeden Pixel die Farbe speichern sondern nur einmal.
 Bei der verlustbehafteten intraframe Komprimierung werden dann hingegen, Farbunterschiede die das menschliche Auge kaum oder überhaupt nicht erkennen kann, nicht mehr gespeichert. 
-MJPEG verwendet für teile der Komprimierung das YCbCr-Modell hier wird hauptsächlich die Helligkeit gespeichert und Farbe nur noch reduziert \parencite{pearson_an}. 
+\enquote{MJPEG} verwendet für teile der Komprimierung das \enquote{YCbCr}-Modell hier wird hauptsächlich die Helligkeit gespeichert und Farbe nur noch reduziert \parencite{pearson_an}. \newline
+
 Zusätzlich zu der intraframe Komprimierung kann man auch noch interframe Komprimierung anwenden. Dabei wird über mehrere Frames hinweg Speicher gespart, indem beispielsweise nur die Unterschiede zu einem vorherigen Frame gespeichert werden, 
-falls sich nicht viel geändert hat \parencite{putra_2023_interframe}. Bei dem Kompressionsalgorithmen h.264 wird dies zum Beispiel eingesetzt, es werden komplette I-Frames gespeichert, und darauf folgen dann P-Frames die nur Unterschiede zu den I-frames enthalten \parencite{kalva_the}.
+falls sich nicht viel geändert hat \parencite{putra_2023_interframe}. Bei dem Kompressionsalgorithmen \enquote{H.264} wird dies zum Beispiel eingesetzt, es werden komplette I-Frames gespeichert, 
+und darauf folgen dann P-Frames die nur Unterschiede zu den I-frames enthalten \parencite{kalva_the}.
 
 \subsection{hardwaregestützte Komprimierung}
+
+Um CPU Auslastung zu sparen, kann man die Treiber des Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. Das HB10 besitzt eine AMD Embedded Ryzen R1606 APU, 
+welche die Fähigkeiten der VCN Engine von AMD unterstützt \parencite{_2025_amd,_r1000,_2026_r1000}.
 		
 \vspace{1em}
