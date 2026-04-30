@@ -21,22 +21,26 @@ einfache Einbindung von den von Kameras unterstützten Kompressionsverfahren. Vi
 entsprechender Parameter in \enquote{FFmpeg} können diese bereits komprimierten Datenströme ohne vorherige Dekodierung übernommen werden. Dies schont die Ressourcen der CPU und des Arbeitsspeichers, 
 da das System die Videodaten nicht erst rechenintensiv verarbeiten muss, bevor sie für die weitere Verwendung bereitgestellt werden können.
 
-\subsection{Komprimierungsalgorithmen} \label{sec:compression}
+\subsection{Video-Komprimierungsalgorithmen} \label{sec:compression}
 
-Beim Videocodierung gibt es verschieden arten der Komprimierung. Es wird zwischen intraframe und interframe Komprimierung unterschieden.\newline
+In der Videoverarbeitung wird grundlegend zwischen Intra-Frame- und Inter-Frame-Komprimierung unterschieden. Bei der Intra-Frame-Komprimierung wird jedes Bild einzeln bearbeitet. Hierbei lassen sich Daten einsparen, 
+indem Informationen innerhalb eines Bildes zusammengefasst oder Details entfernt werden, die das menschliche Auge kaum wahrnehmen kann. Ein Beispiel hierfür ist der \enquote{MJPEG}-Standard, 
+der das \enquote{YCbCr}-Farbmodell verwendet. Dabei wird die Helligkeit detailliert gespeichert, während die Farbinformationen reduziert werden \parencite{pearson_an}. \newline
 
-Bei der intraframe Komprimierung wird auf jeden einzelnen Frame ein
-Komprimierungsalgorithmus angewendet. Bei verlustloser intraframe Komprimierung werden dann beispielsweise Speichernutzung verringert, indem große Bereiche mit identischer Farbe nicht für jeden Pixel die Farbe speichern sondern nur einmal.
-Bei der verlustbehafteten intraframe Komprimierung werden dann hingegen, Farbunterschiede die das menschliche Auge kaum oder überhaupt nicht erkennen kann, nicht mehr gespeichert. 
-\enquote{MJPEG} verwendet für teile der Komprimierung das \enquote{YCbCr}-Modell hier wird hauptsächlich die Helligkeit gespeichert und Farbe nur noch reduziert \parencite{pearson_an}. \newline
-
-Zusätzlich zu der intraframe Komprimierung kann man auch noch interframe Komprimierung anwenden. Dabei wird über mehrere Frames hinweg Speicher gespart, indem beispielsweise nur die Unterschiede zu einem vorherigen Frame gespeichert werden, 
-falls sich nicht viel geändert hat \parencite{putra_2023_interframe}. Bei dem Kompressionsalgorithmen \enquote{H.264} wird dies zum Beispiel eingesetzt, es werden komplette I-Frames gespeichert, 
-und darauf folgen dann P-Frames die nur Unterschiede zu den I-frames enthalten \parencite{kalva_the}.
+Zusätzlich kann die Inter-Frame-Komprimierung genutzt werden, um die zeitlichen Ähnlichkeiten zwischen aufeinanderfolgenden Bildern zu verwenden. Anstatt jedes Bild vollständig zu speichern,
+werden oft nur die Unterschiede zum vorherigen Bild aufgezeichnet \parencite{putra_2023_interframe}. Der Standard \enquote{H.264} setzt dieses Prinzip durch \enquote{I-Frames} und \enquote{P-Frames} um. 
+Während ein \enquote{I-Frame} das gesamte Bild enthält, speichern die folgenden \enquote{P-Frames} lediglich die Veränderungen zum vorangegangenen Bild \parencite{kalva_the}. Dieses
+Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
 
 \subsection{hardwaregestützte Komprimierung}
 
-Um CPU Auslastung zu sparen, kann man die Treiber des Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. Das HB10 besitzt eine AMD Embedded Ryzen R1606 APU, 
-welche die Fähigkeiten der VCN Engine von AMD unterstützt \parencite{_2025_amd,_r1000,_2026_r1000}.
+Um CPU Auslastung zu sparen, kann man die Treiber des Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. Das HB10 besitzt eine AMD Embedded Ryzen R1606 APU,
+welche die Fähigkeiten der VCN Engine von AMD unterstützt \parencite{_2025_amd,_r1000,_2026_r1000}. Sollten die unterstützten Formate der externen Kameras nicht passen, oder falls man die Videos noch ver-/bearbeiten muss, bietet die hardwaregestützte
+Komprimierung einen effizienten Weg, um die Größe des Videos so klein wie möglich zu halten.
+
+Die in der APU integrierte VCN-Einheit (\enquote{Video Core Next}) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
+wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \enquote{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
+die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}. Da die eingesetzte USB-Kamera nativ MJPEG und H.264 unterstützt, 
+kann das Videomaterial entweder direkt verarbeitet oder mittels VA-API effizient in ein Format mit höherer Kompressionsrate transkodiert werden, ohne den Arbeitsspeicher oder die Prozessorleistung übermäßig zu beanspruchen \parencite{kalva_the, pearson_an}.
 		
 \vspace{1em}
