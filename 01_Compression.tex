@@ -1,5 +1,12 @@
 % !TeX root = t3_3000.tex
-        
+
+\begin{figure*}
+    \centering
+    \includesvg[width=\textwidth]{Images/t3_3000.svg}
+    \label{fig:structure}
+    \caption{Abbildung 1:}
+\end{figure*}
+
 \section{Video- Aufnahme und Komprimierung} \label{sec:1}
 
 Die Realisierung einer stabilen Videoaufnahme auf einem Ubuntu-basierten System erfordert eine performante Interaktion zwischen Hardware und Software. Der Zugriff auf USB-basierte Videoquellen wird primär über die Video4Linux (V4L2) Schnittstelle gesteuert,
@@ -32,11 +39,11 @@ werden oft nur die Unterschiede zum vorherigen Bild aufgezeichnet \parencite{put
 Während ein \enquote{I-Frame} das gesamte Bild enthält, speichern die folgenden \enquote{P-Frames} lediglich die Veränderungen zum vorangegangenen Bild \parencite{kalva_the}. Dieses
 Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
 
-\subsection{hardwaregestützte Komprimierung}
+\subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
 
 Um CPU Auslastung zu sparen, kann man die Treiber des Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. Das HB10 besitzt eine AMD Embedded Ryzen R1606 APU,
 welche die Fähigkeiten der VCN Engine von AMD unterstützt \parencite{_2025_amd,_r1000,_2026_r1000}. Sollten die unterstützten Formate der externen Kameras nicht passen, oder falls man die Videos noch ver-/bearbeiten muss, bietet die hardwaregestützte
-Komprimierung einen effizienten Weg, um die Größe des Videos so klein wie möglich zu halten.
+Komprimierung einen effizienten Weg, um die Größe des Videos so klein wie möglich zu halten.\newline
 
 Die in der APU integrierte VCN-Einheit (\enquote{Video Core Next}) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
 wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \enquote{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
