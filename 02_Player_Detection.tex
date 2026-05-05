@@ -45,12 +45,16 @@ Die theoretische Distanz $d$ auf der Bodenebene lässt sich vereinfacht wie folg
 
 Hierbei repräsentiert $\beta$ den relativen Winkel des Bildpunkts zur optischen Achse, welcher aus der vertikalen Pixelposition der Unterkante abgeleitet werden kann: 
 
-$$\beta = \left( \frac{y_{unten}}{H} - 0.5 \right) \cdot FOV_v$$ \parencite{limelight_estimating_distance}
+\begin{equation}
+    \beta = \left( \frac{y_{unten}}{H} - 0.5 \right) \cdot FOV_v
+\end{equation}
 
 \begin{itemize}
     \item $y_{unten}$: Die vertikale Pixelkoordinate der Unterkante der Bounding Box.
     \item $H$: Die Gesamthöhe des Bildes in Pixeln.
     \item $FOV_v$: Der vertikale Öffnungswinkel der Kamera.
 \end{itemize}
+
+\parencite{limelight_estimating_distance}\newline
 
 Erreicht die d einen Wert $d_{min}$, wird das Objekt als zu nah eingestuft und als Verdächtig gekennzeichnet.
