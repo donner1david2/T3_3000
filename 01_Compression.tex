@@ -49,5 +49,24 @@ Die in der APU integrierte VCN-Einheit (\enquote{Video Core Next}) stellt dedizi
 wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \enquote{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
 die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}. Da die eingesetzte USB-Kamera nativ MJPEG und H.264 unterstützt, 
 kann das Videomaterial entweder direkt verarbeitet oder mittels VA-API effizient in ein Format mit höherer Kompressionsrate umgewandelt werden, ohne den Arbeitsspeicher oder die Prozessorleistung übermäßig zu beanspruchen \parencite{kalva_the, pearson_an}.
-		
+
+\subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
+
+Die Auswahl eines geeigneten Kompressionsverfahrens ist entscheidend für die Balance zwischen der Auslastung lokaler Ressourcen und der benötigten Netzwerkbandbreite. Da die verwendete USB-Kamera MJPEG und H.264 nativ unterstützt, 
+ergeben sich unterschiedliche Szenarien für die Vorverarbeitung und den Transfer \parencite{_2020_part}.
+
+MJPEG basiert auf der Einzelbildkompression(Intra-Frame-Komprimierung), bei der jedes Frame unabhängig von anderen Bildern verarbeitet wird \parencite{pearson_an}. Dies führt zu einer sehr geringen Rechenlast beim Enkodieren und Dekodieren, 
+resultiert jedoch in einer hohen Datenrate, da keine zeitlichen Redundanzen zwischen den Bildern genutzt werden (Inter-Frame-Komprimierung) \parencite{pearson_an}. Für die Anwendung von Algorithmen zur Objekterkennung bietet MJPEG den Vorteil, 
+dass Einzelbilder ohne aufwendige Rekonstruktion eines Video-Streams direkt aus dem Datenstrom extrahiert werden können.
+
+Im Gegensatz dazu nutzen H.264 und H.265 die Inter-Frame-Kompression, um Redundanzen über die Zeit hinweg zu reduzieren \parencite{putra_2023_interframe}. H.264 bietet eine weitreichende Kompatibilität und eine 
+effiziente Reduktion der Dateigröße im Vergleich zu MJPEG \parencite{kalva_the}. Da die Hardware des Typs AMD Ryzen Embedded R1000 über dedizierte Einheiten für das Video-Encoding verfügt, könnte die Kompression 
+mittels VA-API oder der AMF-Schnittstelle direkt auf die GPU ausgelagert werden \parencite{_2026_ffmpeg, gpuopenlibrariessdks_2025_amf_video_encode_api}. Dies schont die CPU-Ressourcen und den Arbeitsspeicher während des Betriebs \parencite{_2025_amd}.
+
+H.265 erreicht bei gleicher visueller Qualität eine noch stärkere Kompression als H.264, was die benötigte Bandbreite für die Übertragung an einen Server weiter minimiert \parencite{putra_2023_interframe}. Allerdings ist 
+die algorithmische Komplexität von H.265 deutlich höher. Da die Kamera selbst kein H.265 liefert, müssten die Daten auf dem lokalen System zunächst empfangen und anschließend mit der GPU in das H.265-Format 
+umgewandelt werden \parencite{_2025_amd}. Ein solches Vorgehen ist sinnvoll, wenn die Einsparung von Speicherplatz und Rechenleistung auf dem Server und die Reduktion der Übertragungskosten Vorrang vor der minimalen Latenz auf dem lokalen Gerät haben.
+
+\enquote{Wissenschaftliche Untersuchungen zeigen, dass durch die Nutzung von Inter-Frame-Methoden signifikante Einsparungen bei der Datenrate möglich sind, sofern die Hardware die Komplexität effizient bewältigen kann} \parencite{putra_2023_interframe}.
+
 \vspace{1em}
