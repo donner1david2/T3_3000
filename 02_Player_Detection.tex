@@ -1,4 +1,11 @@
-		% !TeX root = t3_3000.tex
+% !TeX root = t3_3000.tex
         
-        \section{Überschrift 1}
+\section{Effiziente Objekterkennung zur Analyse am Dart-Gerät}
+
+Um eine automatisierte Prüfung des Wurfabstands sowie eine Unterscheidung zwischen geworfenen und gesteckten Pfeilen umzusetzen, ist eine ressourcenschonende Objekterkennung notwendig. 
+Durch die Lokalisierung des Spielers im Kamerabild kann mathematisch geprüft werden, ob die Distanz zum Dart-Gerät in etwa den Regeln entspricht. Um den Anforderungen an eine geringe CPU- und Arbeitsspeicherauslastung auf der Zielhardware gerecht zu werden, 
+müssen die untersuchten Verfahren eine niedrige algorithmische Komplexität aufweisen \parencite{_14, _2025_amd}.\newline
+
+Techniken wie \enquote{Support Vector Machines} (SVM) in zusammenarbeit mit \enquote{Histogram of Oriented Gradients} (HOG) sind dabei vorteilhaft, da sie die CPU weniger belasten als tiefe neuronale Netze \parencite{_14}. Dies stellt sicher, dass die Hardware, 
+genügend Kapazitäten für den zeitgleichen Spielbetrieb und die Videoverarbeitung behält \parencite{_2025_amd}.
 		
