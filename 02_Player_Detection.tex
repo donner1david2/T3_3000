@@ -8,4 +8,49 @@ müssen die untersuchten Verfahren eine niedrige algorithmische Komplexität auf
 
 Techniken wie \enquote{Support Vector Machines} (SVM) in zusammenarbeit mit \enquote{Histogram of Oriented Gradients} (HOG) sind dabei vorteilhaft, da sie die CPU weniger belasten als tiefe neuronale Netze \parencite{_14}. Dies stellt sicher, dass die Hardware, 
 genügend Kapazitäten für den zeitgleichen Spielbetrieb und die Videoverarbeitung behält \parencite{_2025_amd}.
-		
+
+\subsection{Methodenvergleich zur effizienten Objekterkennung am Dart-Gerät}
+
+Die Auswahl eines geeigneten Algorithmus zur Erkennung von Spielern erfordert eine Abwägung zwischen der verfügbaren Rechenleistung und der benötigten Präzision. Im Folgenden werden die Verfahren Viola-Jones, 
+HOG-SVM und Deformable Part Models hinsichtlich ihrer Eignung für den Einsatz an einem Dart-Gerät gegenübergestellt.\newline
+
+Der Viola-Jones-Algorithmus stellt eine besonders ressourcensparende Methode dar, da er auf \enquote{Haar-like features} und dem Prinzip der Kaskaden-Klassifizierung basiert \parencite{d_2022_computer}. Die Berechnung erfolgt effizient über Integralbilder, 
+was eine Objekterkennung in Echtzeit ermöglicht, selbst wenn die CPU-Leistung begrenzt ist \parencite{d_2022_computer}. In Bezug auf die Genauigkeit stößt das Verfahren jedoch bei Objekten an Grenzen, die keine starre Struktur aufweisen oder deren 
+Erscheinungsbild durch unterschiedliche Kleidung und Posen der Spieler stark variiert. Der Algorithmus eignet sich beispielsweise gut für Gesichtserkennung, ist  für diesen Anwendungsfall jedoch wahrscheinlich zu ungenau.\newline
+
+Ein verbreiteter Standard für die Personenerkennung ist die Nutzung von Histogrammen orientierter Gradienten (HOG) in Kombination mit Support Vector Machines (SVM). Die HOG-Methode extrahiert Merkmale, 
+indem sie die Verteilung von Helligkeitskanten in einzelnen Bildbereichen analysiert \parencite{tam_2023_extracting}. Die Klassifizierung mittels SVM weist eine Komplexität auf, die maßgeblich von der Anzahl der Merkmale und der Anzahl der Support-Vektoren 
+bestimmt wird \parencite{_14}. Während dieses Verfahren eine deutlich höhere Robustheit gegenüber Formveränderungen des Spielers bietet als Viola-Jones, steigt die Rechenintensität durch die notwendige Berechnung der Gradientenfelder und die 
+Normalisierung der Blöcke an \parencite{tam_2023_how}.\newline
+
+Für eine noch präzisere Analyse können Deformable Part Models (DPM) eingesetzt werden. Diese erweitern den HOG-basierten Ansatz, indem sie das Zielobjekt in einzelne, flexible Teile zerlegen \parencite{girshick_deformable}. Dies erlaubt eine sehr genaue 
+Erkennung von Spielern, selbst wenn Körperteile teilweise verdeckt sind oder extreme Posen eingenommen werden \parencite{girshick_deformable}. Dieser Zuwachs an Genauigkeit geht jedoch mit einer massiv erhöhten Rechenintensität bei der Ausführung einher, 
+da für jedes Teilmodell separate Filteroperationen durchgeführt werden müssen, was die Echtzeitfähigkeit auf ressourcenbeschränkter Hardware wie dem Dart erschweren kann.\newline
+
+Zusammenfassend lässt sich festhalten, dass für eine Anwendung am Dart-Gerät, die auf minimalen RAM- und CPU-Verbrauch optimiert ist, die Verwendung mittels Support Vector Machines vorteilhaft ist. Für eine zuverlässige 
+Spieleranalyse unter realen Bedingungen bietet die Kombination aus HOG und SVM einen Kompromiss aus Performance und Genauigkeit.
+
+\subsection{Geometrische Distanzüberprüfung zur Filterung}
+
+Um eine effiziente Verarbeitung zu gewährleisten, kann die räumliche Position eines Spielers durch eine geometrische Analyse der \enquote{Bounding Box} in Relation zur Kameraposition geschätzt werden. Anstatt eine vollständige Tiefenkarte zu berechnen, 
+wird hierbei die vertikale Position der Unterkante der \enquote{Bounding Box} als Indikator für die Nähe zum Dart-Gerät verwendet.\newline
+
+Unter der Annahme, dass die Kamera in einer festen Höhe $h$ montiert ist und in einem Neigungswinkel $\alpha$ zum Boden steht, 
+lässt sich ein Schwellenwert für die y-Koordinate im Bild definieren. Dieser Schwellenwert dient dazu, Spieler zu erkennen, die sich \enquote{zu nah} an der Kamera befinden. 
+Die theoretische Distanz $d$ auf der Bodenebene lässt sich vereinfacht wie folgt modellieren:
+
+\begin{equation}
+    d = h \cdot \tan(90^{\circ} - \alpha + \beta)
+\end{equation}
+
+Hierbei repräsentiert $\beta$ den relativen Winkel des Bildpunkts zur optischen Achse, welcher aus der vertikalen Pixelposition der Unterkante abgeleitet werden kann: 
+
+$$\beta = \left( \frac{y_{unten}}{H} - 0.5 \right) \cdot FOV_v$$ \parencite{limelight_estimating_distance}
+
+\begin{itemize}
+    \item $y_{unten}$: Die vertikale Pixelkoordinate der Unterkante der Bounding Box.
+    \item $H$: Die Gesamthöhe des Bildes in Pixeln.
+    \item $FOV_v$: Der vertikale Öffnungswinkel der Kamera.
+\end{itemize}
+
+Erreicht die d einen Wert $d_{min}$, wird das Objekt als zu nah eingestuft und als Verdächtig gekennzeichnet.
