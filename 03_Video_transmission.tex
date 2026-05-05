@@ -8,3 +8,14 @@ ist die Anforderung, die Rechenlast auf dem Server so gering wie möglich zu hal
 Da die spezifische Serverart derzeit noch nicht definiert ist, kommen verschiedene Übertragungsmodelle in Betracht. Für eine dateibasierte Speicherung in einem \enquote{Object Storage} \parencite{susnjara_2025_object} bieten sich Verfahren wie 
 \enquote{multipart/form-data} \parencite{muhibullah_2024_understanding} oder das \enquote{Secure Copy Protocol} \parencite{_2020_scp} an. Alternativ könnten Streaming-Protokolle wie \enquote{SRT} \parencite{haivision_2025_srtdocsreadmemd} oder 
 \enquote{RTMP} \parencite{_2023_was} für eine kontinuierliche Datenübermittlung untersucht werden.
+
+\subsection{REST-Schnittstellen und Object Storage}
+
+Die Übertragung von Videoaufnahmen an einen zentralen Server kann über REST-Schnittstellen realisiert werden. Ein wesentlicher Vorteil dieses Ansatzes liegt in der Nutzung des weit verbreiteten HTTP-Protokolls, was die Integration in bestehende 
+Web-Infrastrukturen erleichtert und eine hohe Kompatibilität mit verschiedenen Programmiersprachen gewährleistet \parencite{_2026_file}. Für den Dateiupload wird dabei zumeist das Format \enquote{multipart/form-data} eingesetzt, 
+welches die Übermittlung von Binärdaten innerhalb einer HTTP-Anfrage ermöglicht \parencite{muhibullah_2024_understanding}. Allerdings bringt REST bei sehr großen Datenmengen einen gewissen Overhead mit sich, da das Protokoll ursprünglich nicht für die 
+Übertragung massiver Dateien optimiert wurde.\newline
+
+Für die dauerhafte Speicherung der übertragenen Videos bietet sich der Einsatz von Object Storage an. Im Vergleich zu klassischen hierarchischen Dateisystemen werden Daten im Object Storage als eigenständige Einheiten in einer flachen Struktur verwaltet, 
+was eine nahezu unbegrenzte Skalierbarkeit ermöglicht \parencite{susnjara_2025_object}. Jedes Objekt besteht dabei aus den eigentlichen Daten, Metadaten und einer eindeutigen Identifikationsnummer, worüber der Zugriff meist direkt über REST-basierte 
+Programmierschnittstellen erfolgt \parencite{_what}. Dies erlaubt einen ökonomischen Betrieb, da Speicherplatz bedarfsgerecht skaliert werden kann und die Verwaltung der Videoaufnahmen durch die assoziierten Metadaten vereinfacht wird \parencite{_2025_what}.
