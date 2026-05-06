@@ -9,13 +9,32 @@ Da die spezifische Serverart derzeit noch nicht definiert ist, kommen verschiede
 \enquote{multipart/form-data} \parencite{muhibullah_2024_understanding} oder das \enquote{Secure Copy Protocol} \parencite{_2020_scp} an. Alternativ könnten Streaming-Protokolle wie \enquote{SRT} \parencite{haivision_2025_srtdocsreadmemd} oder 
 \enquote{RTMP} \parencite{_2023_was} für eine kontinuierliche Datenübermittlung untersucht werden.
 
-\subsection{REST-Schnittstellen und Object Storage}
+\subsection{Streaming-Protokolle am Beispiel von RTMP}
 
-Die Übertragung von Videoaufnahmen an einen zentralen Server kann über REST-Schnittstellen realisiert werden. Ein wesentlicher Vorteil dieses Ansatzes liegt in der Nutzung des weit verbreiteten HTTP-Protokolls, was die Integration in bestehende 
-Web-Infrastrukturen erleichtert und eine hohe Kompatibilität mit verschiedenen Programmiersprachen gewährleistet \parencite{_2026_file}. Für den Dateiupload wird dabei zumeist das Format \enquote{multipart/form-data} eingesetzt, 
-welches die Übermittlung von Binärdaten innerhalb einer HTTP-Anfrage ermöglicht \parencite{muhibullah_2024_understanding}. Allerdings bringt REST bei sehr großen Datenmengen einen gewissen Overhead mit sich, da das Protokoll ursprünglich nicht für die 
-Übertragung massiver Dateien optimiert wurde.\newline
+Für die Übertragung von Videodaten an einen Server könnten verschiedene Streaming-Protokolle herangezogen werden. Das \enquote{Real-Time Messaging Protocol} (RTMP) ist hierbei ein etablierter Standard \parencite{byrd_2026_what}. 
+Es bietet eine geringe Latenz \parencite{skavish_2022_ein} und nutzt TCP, um sicherzustellen, dass Datenpakete in der richtigen Reihenfolge ankommen \parencite{_2023_was}.\newline  
 
-Für die dauerhafte Speicherung der übertragenen Videos bietet sich der Einsatz von Object Storage an. Im Vergleich zu klassischen hierarchischen Dateisystemen werden Daten im Object Storage als eigenständige Einheiten in einer flachen Struktur verwaltet, 
-was eine nahezu unbegrenzte Skalierbarkeit ermöglicht \parencite{susnjara_2025_object}. Jedes Objekt besteht dabei aus den eigentlichen Daten, Metadaten und einer eindeutigen Identifikationsnummer, worüber der Zugriff meist direkt über REST-basierte 
-Programmierschnittstellen erfolgt \parencite{_what}. Dies erlaubt einen ökonomischen Betrieb, da Speicherplatz bedarfsgerecht skaliert werden kann und die Verwaltung der Videoaufnahmen durch die assoziierten Metadaten vereinfacht wird \parencite{_2025_what}.
+Alternativ könnte \enquote{HTTP Live Streaming} (HLS) verwendet werden, welches einen Videostream in segmentierte kleine Dateien aufteilt und diese über Standard-HTTP ausliefert \parencite{_2026_eigener}. Für unzuverlässige Netzwerke bietet 
+sich das Protokoll SRT (\enquote{Secure Reliable Transport}) an, da es darauf ausgelegt ist, Videodaten sicher und mit minimaler Verzögerung zu transportieren \parencite{haivision_2025_srtdocsreadmemd}. Weiterhin könnte HTTP/3 zum Einsatz kommen,
+welches auf dem UDP-basierten QUIC-Protokoll basiert und Verbindungsaufbauzeiten sowie Latenzen gegenüber klassischen TCP-Verbindungen deutlich reduziert \parencite{_2021_was, iyengar_2021_rfc, litespeedtech_2026_github}.\newline  
+
+Trotz dieser Eigenschaften weisen Streaming-Protokolle für den spezifischen Anwendungsfall der asynchronen Speicherung von Kameraaufzeichnungen entscheidende Nachteile auf. Protokolle wie RTMP setzen eine durchgehend stabile Verbindung 
+voraus \parencite{_2023_was} und sind architektonisch auf die sofortige Auslieferung an Endgeräte optimiert, nicht aber auf eine effiziente Dateispeicherung \parencite{skavish_2022_ein}. Die Segmentierung bei HLS \parencite{_2026_eigener} oder die 
+zusätzliche Logik zur Fehlerkorrektur bei SRT \parencite{haivision_2025_srtdocsreadmemd} verursachen zusätzlichen Overhead. Wenn das primäre Ziel darin besteht, ein komprimiertes Video bandbreiten- und ressourcenschonend auf einem Server abzulegen, 
+binden diese Protokolle unnötig CPU-Kapazitäten sowohl auf dem sendenden System als auch auf dem Server. Für die reine Archivierung von Dateien bieten dateibasierte Übertragungsprotokolle eine deutlich ressourceneffizientere Alternative. 
+
+\subsection{Dateibasierte Übertragungsverfahren}
+
+Im Gegensatz zu den ressourcenintensiven Streaming-Protokollen bieten dateibasierte Übertragungsverfahren eine effizientere Möglichkeit, komprimierte Videodateien an einen Server zu senden und dort langfristig zu speichern. Da die Videos nach der 
+Aufnahme bereits in komprimierter Form vorliegen, entfällt bei einer solchen Übertragung der Overhead für eine Echtzeit-Synchronisation.\newline
+
+Eine etablierte Methode für die sichere Übertragung ist das \enquote{Secure Copy Protocol} (SCP) \parencite{_2020_scp, _2025_scp}. Dieses Protokoll basiert auf SSH und ermöglicht eine verschlüsselte Kopie von Dateien zwischen lokalen Systemen und entfernten 
+Servern \parencite{ylonen_2006_rfc, _2020_scp}. Eine funktionsreichere Alternative stellt das \enquote{SSH File Transfer Protocol} (SFTP) dar, welches ebenfalls die SSH-Infrastruktur nutzt, darüber hinaus aber erweiterte Dateiverwaltungsfunktionen bietet 
+\parencite{_2025_sftp}. Beide Verfahren verursachen jedoch durch die kryptografischen Operationen eine gewisse CPU-Auslastung auf dem sendenden System und dem Server.\newline  
+
+Für eine nahtlose Integration in webbasierte REST-Architekturen kann die Übertragung alternativ mittels HTTP-Requests vom Typ \enquote{multipart/form-data} realisiert werden \parencite{_2026_file, muhibullah_2024_understanding}. 
+Dieser Standard wird nativ für Datei-Uploads verwendet und lässt sich ressourcenschonend mit gängigen Webservern verarbeiten \parencite{muhibullah_2024_understanding}.\newline  
+
+Als finales Zielsystem für die Datenspeicherung auf Serverseite könnte ein \enquote{Object Storage} evaluiert werden \parencite{_what}. Im Gegensatz zu klassischen, hierarchischen Dateisystemen werden Daten in diesem Ansatz als Objekte 
+mit zugehörigen Metadaten in einem flachen Adressraum abgelegt \parencite{susnjara_2025_object, _2025_what}. Dies erweist sich insbesondere bei der Archivierung von großen Mengen an unstrukturierten Daten, wie es bei Videodateien der Fall ist, 
+als hochgradig skalierbar \parencite{susnjara_2025_object}. Die Übertragung in einen Objektspeicher erfolgt in der Regel direkt über standardisierte HTTP-APIs, wodurch zusätzliche serverseitige Umwege über Dateisystem-Mounts entfallen könnten.
