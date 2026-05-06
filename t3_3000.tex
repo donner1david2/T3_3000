@@ -28,6 +28,19 @@
 \usepackage[backend=biber, style=authoryear]{biblatex}
 \addbibresource{quellen.bib}
 
+%use [] for parencites
+\makeatletter
+\DeclareFieldFormat{citebackslash}{[\mkbibnamelast{#1}]}
+\renewcommand*{\nameyeardelim}{\addcomma\space} % Adds comma like [Jones, 2024]
+\DeclareFieldFormat{biblabeldate}{#1}
+\DeclareCiteCommand{\parencite}[\mkbibbrackets]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+\makeatother
+
 % Überschriften enger und zentriert
 \usepackage{titlesec}
 \titleformat{\section}
@@ -47,8 +60,6 @@
 \renewcommand{\refname}{Literatur}
 
 \begin{document}
-
-	
 	
 	% Zentrierter Titelblock
 	\begin{center}
