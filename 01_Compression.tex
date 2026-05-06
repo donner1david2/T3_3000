@@ -2,18 +2,21 @@
 
 \section{Video- Aufnahme und Komprimierung} \label{sec:1}
 
-Die Realisierung einer stabilen Videoaufnahme auf einem Ubuntu-basierten System erfordert eine performante Interaktion zwischen Hardware und Software. Der Zugriff auf USB-basierte Videoquellen wird primär über die Video4Linux (V4L2) Schnittstelle gesteuert,
-welche die standardisierte Kommunikation zwischen dem Betriebssystemkern und den Anwendungen im Userspace ermöglicht \parencite{_2020_part}. Da die hohen Datenraten unkomprimierter Videostreams die 
+Das \enquote{HB10} besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera unterstützt die Video Formate \enquote{MJPEG} \enquote{YUYV} und \enquote{H.264} in verschiedenen Auflösungen und Wiederholraten,
+in Abhängigkeit der Formate.
+
+Die Realisierung einer stabilen Videoaufnahme für den \enquote{HB10} erfordert eine performante Interaktion zwischen Hardware und Software. Der Zugriff auf Videoquellen wird primär über die Video4Linux (V4L2) Schnittstelle gesteuert,
+welche die standardisierte Kommunikation zwischen dem Kernel und den Anwendungen im Userspace ermöglicht \parencite{_2020_part}. Da die hohen Datenraten unkomprimierter Videostreams die 
 Systemressourcen des \enquote{HB10} bei gleichzeitiger Ausführung anderer Prozesse auslasten könnten, ist eine effiziente Komprimierung der Daten notwendig.\newline
 
 Zur Minimierung der Prozessorlast und des Arbeitsspeicherverbrauchs bieten sich hardwaregestützte Kodierungsverfahren an. Diese verlagern die rechenintensiven Kompressionsalgorithmen vom Hauptprozessor auf 
-dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im Kontext der im System eingesetzten AMD Ryzen Embedded R1000 Prozessoren relevant, 
+dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im Kontext der im \enquote{HB10} eingebauten APU relevant, 
 da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügen \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Im Folgenden werden die technischen Grundlagen des 
 Kamerazugriffs sowie die Auswahl geeigneter Kompressionsverfahren unter Berücksichtigung der Hardwarebeschleunigung erläutert.
 
 \subsection{Kamera als Videoquelle} \label{sec:camera}
 
-Der Zugriff auf externe Kameras unter \enquote{Ubuntu} erfolgt standardmäßig über die \enquote{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
+Der Zugriff auf externe Kameras unter \enquote{Linu} erfolgt standardmäßig über die \enquote{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
 erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \enquote{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}.\newline
 
 \enquote{FFmpeg} dient als Abstraktionsebene für V4L und vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Ein entscheidender Vorteil bei der Nutzung von \enquote{FFmpeg} ist die 
@@ -34,21 +37,23 @@ Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
 
 \subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
 
-Um CPU Auslastung zu sparen, kann man die Treiber des Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. Das HB10 besitzt eine AMD Embedded Ryzen R1606 APU,
-welche die Fähigkeiten der VCN Engine von AMD unterstützt \parencite{_2025_amd,_r1000,_2026_r1000}. Sollten die unterstützten Formate der externen Kameras nicht passen, oder falls man die Videos noch ver-/bearbeiten muss, bietet die hardwaregestützte
-Komprimierung einen effizienten Weg, um die Größe des Videos so klein wie möglich zu halten.\newline
+Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. 
+Der Grafikprozessor des \enquote{HB10} unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000,_2026_r1000}.\newline
 
 Die in der APU integrierte VCN-Einheit (\enquote{Video Core Next}) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
 wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \enquote{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
 die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}. Da die eingesetzte USB-Kamera nativ MJPEG und H.264 unterstützt, 
-kann das Videomaterial entweder direkt verarbeitet oder mittels VA-API effizient in ein Format mit höherer Kompressionsrate umgewandelt werden, ohne den Arbeitsspeicher oder die Prozessorleistung übermäßig zu beanspruchen \parencite{kalva_the, pearson_an}.
+kann das Videomaterial entweder direkt verarbeitet oder mittels VA-API effizient in ein Format mit höherer Kompressionsrate umgewandelt werden, ohne den Arbeitsspeicher oder die Prozessorleistung übermäßig zu beanspruchen \parencite{kalva_the, pearson_an}.\newline
+
+Die Komprimierung der Videos, muss nur in dem Fall vorgenommen werden, in dem der \enquote{HB10} die Videos verarbeiten muss, wie beispielsweise die Anwendung von Objekterkennungsalgorithmen. Da aber noch nicht feststeht ob dies der Fall seien wird,
+besteht auch die Möglichkeit die von der Kamera unterstützten Formate anzuwenden.
 
 \subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
 
 Die Auswahl eines geeigneten Kompressionsverfahrens ist entscheidend für die Balance zwischen der Auslastung lokaler Ressourcen und der benötigten Netzwerkbandbreite. Da die verwendete USB-Kamera MJPEG und H.264 nativ unterstützt, 
 ergeben sich unterschiedliche Szenarien für die Vorverarbeitung und den Transfer \parencite{_2020_part}.\newline
 
-MJPEG basiert auf der Einzelbildkompression(Intra-Frame-Komprimierung), bei der jedes Frame unabhängig von anderen Bildern verarbeitet wird \parencite{pearson_an}. Dies führt zu einer sehr geringen Rechenlast beim Enkodieren und Dekodieren, 
+MJPEG basiert auf der Einzelbildkompression(Intra-Frame-Komprimierung), bei der jedes Frame unabhängig von anderen Bildern verarbeitet wird \parencite{pearson_an}. Dies führt zu einer sehr geringen Rechenlast beim Kodieren und Dekodieren, 
 resultiert jedoch in einer hohen Datenrate, da keine zeitlichen Redundanzen zwischen den Bildern genutzt werden (Inter-Frame-Komprimierung) \parencite{pearson_an}. Für die Anwendung von Algorithmen zur Objekterkennung bietet MJPEG den Vorteil, 
 dass Einzelbilder ohne aufwendige Rekonstruktion eines Video-Streams direkt aus dem Datenstrom extrahiert werden können.\newline
 
