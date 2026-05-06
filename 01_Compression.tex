@@ -1,12 +1,5 @@
 % !TeX root = t3_3000.tex
 
-\begin{figure*}
-    \centering
-    \includesvg[width=\textwidth]{Images/t3_3000.svg}
-    \label{fig:structure}
-    \caption{Abbildung 1:}
-\end{figure*}
-
 \section{Video- Aufnahme und Komprimierung} \label{sec:1}
 
 Die Realisierung einer stabilen Videoaufnahme auf einem Ubuntu-basierten System erfordert eine performante Interaktion zwischen Hardware und Software. Der Zugriff auf USB-basierte Videoquellen wird primär über die Video4Linux (V4L2) Schnittstelle gesteuert,
@@ -66,7 +59,5 @@ mittels VA-API oder der AMF-Schnittstelle direkt auf die GPU ausgelagert werden 
 H.265 erreicht bei gleicher visueller Qualität eine noch stärkere Kompression als H.264, was die benötigte Bandbreite für die Übertragung an einen Server weiter minimiert \parencite{putra_2023_interframe}. Allerdings ist 
 die algorithmische Komplexität von H.265 deutlich höher. Da die Kamera selbst kein H.265 liefert, müssten die Daten auf dem lokalen System zunächst empfangen und anschließend mit der GPU in das H.265-Format 
 umgewandelt werden \parencite{_2025_amd}. Ein solches Vorgehen ist sinnvoll, wenn die Einsparung von Speicherplatz und Rechenleistung auf dem Server und die Reduktion der Übertragungskosten Vorrang vor der minimalen Latenz auf dem lokalen Gerät haben.\newline
-
-\enquote{Wissenschaftliche Untersuchungen zeigen, dass durch die Nutzung von Inter-Frame-Methoden signifikante Einsparungen bei der Datenrate möglich sind, sofern die Hardware die Komplexität effizient bewältigen kann} \parencite{putra_2023_interframe}.
 
 \vspace{1em}
