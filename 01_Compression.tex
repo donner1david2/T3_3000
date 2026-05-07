@@ -21,6 +21,22 @@ werden oft nur die Unterschiede zum vorherigen Bild aufgezeichnet \parencite{put
 Während ein \enquote{I-Frame} das gesamte Bild enthält, speichern die folgenden \enquote{P-Frames} lediglich die Veränderungen zum vorangegangenen Bild \parencite{kalva_the}. Dieses
 Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
 
+\subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
+
+Das \enquote{HB10} besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera (Modell: ELP-USB3MP01H-L29) unterstützt die Video Formate \enquote{MJPEG} \enquote{YUYV} und \enquote{H.264} in verschiedenen Auflösungen und Wiederholraten,
+in Abhängigkeit der Formate.
+
+Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. 
+Der Grafikprozessor des \enquote{HB10} unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000,_2026_r1000}.\newline
+
+Die in der APU integrierte VCN-Einheit (\enquote{Video Core Next}) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
+wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \enquote{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
+die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}. Da die eingesetzte USB-Kamera nativ MJPEG, H.264 und YUYV unterstützt, 
+kann das Videomaterial entweder direkt verarbeitet, oder mittels VA-API effizient in ein Format mit höherer Kompressionsrate umgewandelt werden, ohne den Arbeitsspeicher oder die Prozessorleistung übermäßig zu beanspruchen \parencite{kalva_the, pearson_an}.\newline
+
+Die Komprimierung der Videos, muss nur vorgenommen werden, solange der \enquote{HB10} die Videos verarbeiten muss, wie beispielsweise das Anwenden von Objekterkennungsalgorithmen. Da aber noch nicht festgelegt wurde, ob dies der Fall benötigt wird,
+besteht auch die Möglichkeit, die Formate anzuwenden, die von der Kamera unterstützt werden.
+
 \subsection{Kamera als Videoquelle} \label{sec:camera}
 
 Der Zugriff auf externe Kameras unter \enquote{Linux} erfolgt standardmäßig über die \enquote{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
@@ -30,22 +46,6 @@ erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Impleme
 einfache Einbindung von den von Kameras unterstützten Kompressionsverfahren. Viele moderne Kameras unterstützen Formate wie \enquote{MJPEG} oder \enquote{H.264} direkt in der Hardware. Durch die Verwendung 
 entsprechender Parameter in \enquote{FFmpeg} können diese bereits komprimierten Datenströme ohne vorherige Dekodierung übernommen werden. Dies schont die Ressourcen der CPU und des Arbeitsspeichers, 
 da das System die Videodaten nicht erst rechenintensiv verarbeiten muss, solange die Videos nicht weiterverarbeitet werden müssen.
-
-\subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
-
-Das \enquote{HB10} besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera unterstützt die Video Formate \enquote{MJPEG} \enquote{YUYV} und \enquote{H.264} in verschiedenen Auflösungen und Wiederholraten,
-in Abhängigkeit der Formate.
-
-Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. 
-Der Grafikprozessor des \enquote{HB10} unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000,_2026_r1000}.\newline
-
-Die in der APU integrierte VCN-Einheit (\enquote{Video Core Next}) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
-wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \enquote{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
-die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}. Da die eingesetzte USB-Kamera nativ MJPEG und H.264 unterstützt, 
-kann das Videomaterial entweder direkt verarbeitet oder mittels VA-API effizient in ein Format mit höherer Kompressionsrate umgewandelt werden, ohne den Arbeitsspeicher oder die Prozessorleistung übermäßig zu beanspruchen \parencite{kalva_the, pearson_an}.\newline
-
-Die Komprimierung der Videos, muss nur vorgenommen werden, solange der \enquote{HB10} die Videos verarbeiten muss, wie beispielsweise das Anwenden von Objekterkennungsalgorithmen. Da aber noch nicht festgelegt wurde, ob dies der Fall benötigt wird,
-besteht auch die Möglichkeit, die Formate anzuwenden, die von der Kamera unterstützt werden.
 
 \subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
 
