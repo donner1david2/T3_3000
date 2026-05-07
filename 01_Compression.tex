@@ -2,16 +2,12 @@
 
 \section{Video- Aufnahme und Komprimierung} \label{sec:1}
 
-Das \enquote{HB10} besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera unterstützt die Video Formate \enquote{MJPEG} \enquote{YUYV} und \enquote{H.264} in verschiedenen Auflösungen und Wiederholraten,
-in Abhängigkeit der Formate.
-
-Die Realisierung einer stabilen Videoaufnahme für den \enquote{HB10} erfordert eine performante Interaktion zwischen Hardware und Software. Der Zugriff auf Videoquellen wird primär über die Video4Linux (V4L2) Schnittstelle gesteuert,
-welche die standardisierte Kommunikation zwischen dem Kernel und den Anwendungen im Userspace ermöglicht \parencite{_2020_part}. Da die hohen Datenraten unkomprimierter Videostreams die 
+Die Realisierung einer stabilen Videoaufnahme für den \enquote{HB10} erfordert eine performante Interaktion zwischen Hardware und Software. Da die hohen Datenraten unkomprimierter Videostreams die 
 Systemressourcen des \enquote{HB10} bei gleichzeitiger Ausführung anderer Prozesse auslasten könnten, ist eine effiziente Komprimierung der Daten notwendig.\newline
 
 Zur Minimierung der Prozessorlast und des Arbeitsspeicherverbrauchs bieten sich hardwaregestützte Kodierungsverfahren an. Diese verlagern die rechenintensiven Kompressionsalgorithmen vom Hauptprozessor auf 
 dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im Kontext der im \enquote{HB10} eingebauten APU relevant, 
-da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügen \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Im Folgenden werden die technischen Grundlagen des 
+da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügt \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Im Folgenden werden die technischen Grundlagen des 
 Kamerazugriffs sowie die Auswahl geeigneter Kompressionsverfahren unter Berücksichtigung der Hardwarebeschleunigung erläutert.
 
 \subsection{Video-Komprimierungsalgorithmen} \label{sec:compression}
@@ -36,6 +32,9 @@ entsprechender Parameter in \enquote{FFmpeg} können diese bereits komprimierten
 da das System die Videodaten nicht erst rechenintensiv verarbeiten muss, solange die Videos nicht weiterverarbeitet werden müssen.
 
 \subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
+
+Das \enquote{HB10} besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera unterstützt die Video Formate \enquote{MJPEG} \enquote{YUYV} und \enquote{H.264} in verschiedenen Auflösungen und Wiederholraten,
+in Abhängigkeit der Formate.
 
 Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. 
 Der Grafikprozessor des \enquote{HB10} unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000,_2026_r1000}.\newline
