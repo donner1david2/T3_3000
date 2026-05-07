@@ -24,12 +24,18 @@
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
 \usepackage{svg}
-\usepackage{caption}
+\usepackage{pdfpages}
 
+\usepackage{caption}
+\usepackage[x11names]{xcolor}
+
+\captionsetup{font={small, color=SlateGray4}}
+
+% Bibtex
 \usepackage[backend=biber, style=authoryear]{biblatex}
 \addbibresource{quellen.bib}
 
-%use [] for parencites
+% use [] for parencites
 \makeatletter
 \DeclareFieldFormat{citebackslash}{[\mkbibnamelast{#1}]}
 \renewcommand*{\nameyeardelim}{\addcomma\space} % Adds comma like [Jones, 2024]
@@ -61,6 +67,9 @@
 \renewcommand{\refname}{Literatur}
 
 \begin{document}
+
+	% header
+	\input{Head.tex}
 	
 	% Zentrierter Titelblock
 	\begin{center}
@@ -78,7 +87,7 @@
 	
 	% Zweispaltiger Hauptteil
 	\begin{multicols*}{2}
-		
+	
 		%Zusammenfassung
 		\input{Abstract.tex}
 
