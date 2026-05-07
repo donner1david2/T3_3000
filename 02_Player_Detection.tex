@@ -2,14 +2,19 @@
         
 \section{Effiziente Objekterkennung zur Analyse am Dart-Gerät}
 
-Um eine automatisierte Prüfung des Wurfabstands sowie eine Unterscheidung zwischen geworfenen und gesteckten Pfeilen umzusetzen, ist eine ressourcenschonende Objekterkennung notwendig. 
-Durch die Lokalisierung des Spielers im Kamerabild kann mathematisch geprüft werden, ob die Distanz zum Dart-Gerät in etwa den Regeln entspricht. Um den Anforderungen an eine geringe CPU- und Arbeitsspeicherauslastung auf der Zielhardware gerecht zu werden, 
-müssen die untersuchten Verfahren eine niedrige algorithmische Komplexität aufweisen \parencite{_14, _2025_amd}.\newline
-
-Techniken wie \enquote{Support Vector Machines} (SVM) in zusammenarbeit mit \enquote{Histogram of Oriented Gradients} (HOG) sind dabei vorteilhaft, da sie die CPU weniger belasten als tiefe neuronale Netze \parencite{_14}. Dies stellt sicher, dass die Hardware, 
-genügend Kapazitäten für den zeitgleichen Spielbetrieb und die Videoverarbeitung behält \parencite{_2025_amd}.
+Mittels Objekterkennung kann die Position des Spielers festgestellt werden. Mit der Position kann man prüfen ob der Spieler hinter der Abwurflinie steht, des weiteren kann man alles abgesehen von dem Spieler ausblenden, 
+um somit mögliche Rechtliche Konsequenzen die durch das Aufnehmen von Personen die sich im Hintergrund befinden entstehen. Man könnte auch alles außer dem Spieler abschneiden, und somit eine kleinere Datenmenge übertragen, um Bandbreite zu sparen.
+Durch die Lokalisierung des Spielers im Kamerabild kann theoretisch mathematisch geprüft werden, ob die Distanz zum Dart-Gerät in etwa den Regeln entspricht, solange sicher gestellt werden kann, in welchem Winkel die Kamera zum Boden steht. 
+Um den Anforderungen an eine geringe CPU- und Arbeitsspeicherauslastung auf der Zielhardware gerecht zu werden, müssen die untersuchten Verfahren eine niedrige algorithmische Komplexität aufweisen \parencite{_14, _2025_amd}.\newline
 
 \subsection{Methodenvergleich zur effizienten Objekterkennung am Dart-Gerät}
+
+\begin{center}
+    \nopagebreak
+    \includesvg[width=\columnwidth]{Images/object.svg}
+    \captionof{figure}{}
+    \label{fig:object}
+\end{center}
 
 Die Auswahl eines geeigneten Algorithmus zur Erkennung von Spielern erfordert eine Abwägung zwischen der verfügbaren Rechenleistung und der benötigten Präzision. Im Folgenden werden die Verfahren Viola-Jones, 
 HOG-SVM und Deformable Part Models hinsichtlich ihrer Eignung für den Einsatz an einem Dart-Gerät gegenübergestellt.\newline
@@ -25,7 +30,7 @@ Normalisierung der Blöcke an \parencite{tam_2023_how}.\newline
 
 Für eine noch präzisere Analyse können Deformable Part Models (DPM) eingesetzt werden. Diese erweitern den HOG-basierten Ansatz, indem sie das Zielobjekt in einzelne, flexible Teile zerlegen \parencite{girshick_deformable}. Dies erlaubt eine sehr genaue 
 Erkennung von Spielern, selbst wenn Körperteile teilweise verdeckt sind oder extreme Posen eingenommen werden \parencite{girshick_deformable}. Dieser Zuwachs an Genauigkeit geht jedoch mit einer massiv erhöhten Rechenintensität bei der Ausführung einher, 
-da für jedes Teilmodell separate Filteroperationen durchgeführt werden müssen, was die Echtzeitfähigkeit auf ressourcenbeschränkter Hardware wie dem Dart erschweren kann.\newline
+da für jedes Teilmodell separate Filteroperationen durchgeführt werden müssen, was die Echtzeitfähigkeit auf ressourcenbeschränkter Hardware wie dem \enquote{HB10} erschweren kann.\newline
 
 Zusammenfassend lässt sich festhalten, dass für eine Anwendung am Dart-Gerät, die auf minimalen RAM- und CPU-Verbrauch optimiert ist, die Verwendung mittels Support Vector Machines vorteilhaft ist. Für eine zuverlässige 
 Spieleranalyse unter realen Bedingungen bietet die Kombination aus HOG und SVM einen Kompromiss aus Performance und Genauigkeit.
