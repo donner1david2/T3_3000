@@ -14,16 +14,6 @@ dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im 
 da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügen \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Im Folgenden werden die technischen Grundlagen des 
 Kamerazugriffs sowie die Auswahl geeigneter Kompressionsverfahren unter Berücksichtigung der Hardwarebeschleunigung erläutert.
 
-\subsection{Kamera als Videoquelle} \label{sec:camera}
-
-Der Zugriff auf externe Kameras unter \enquote{Linu} erfolgt standardmäßig über die \enquote{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
-erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \enquote{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}.\newline
-
-\enquote{FFmpeg} dient als Abstraktionsebene für V4L und vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Ein entscheidender Vorteil bei der Nutzung von \enquote{FFmpeg} ist die 
-einfache Einbindung von den von Kameras unterstützten Kompressionsverfahren. Viele moderne Kameras unterstützen Formate wie \enquote{MJPEG} oder \enquote{H.264} direkt in der Hardware. Durch die Verwendung 
-entsprechender Parameter in \enquote{FFmpeg} können diese bereits komprimierten Datenströme ohne vorherige Dekodierung übernommen werden. Dies schont die Ressourcen der CPU und des Arbeitsspeichers, 
-da das System die Videodaten nicht erst rechenintensiv verarbeiten muss, bevor sie für die weitere Verwendung bereitgestellt werden können.
-
 \subsection{Video-Komprimierungsalgorithmen} \label{sec:compression}
 
 In der Videoverarbeitung wird grundlegend zwischen Intra-Frame- und Inter-Frame-Komprimierung unterschieden. Bei der Intra-Frame-Komprimierung wird jedes Bild einzeln bearbeitet. Hierbei lassen sich Daten einsparen, 
@@ -34,6 +24,16 @@ Zusätzlich kann die Inter-Frame-Komprimierung genutzt werden, um die zeitlichen
 werden oft nur die Unterschiede zum vorherigen Bild aufgezeichnet \parencite{putra_2023_interframe}. Der Standard \enquote{H.264} setzt dieses Prinzip durch \enquote{I-Frames} und \enquote{P-Frames} um. 
 Während ein \enquote{I-Frame} das gesamte Bild enthält, speichern die folgenden \enquote{P-Frames} lediglich die Veränderungen zum vorangegangenen Bild \parencite{kalva_the}. Dieses
 Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
+
+\subsection{Kamera als Videoquelle} \label{sec:camera}
+
+Der Zugriff auf externe Kameras unter \enquote{Linux} erfolgt standardmäßig über die \enquote{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
+erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \enquote{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}.\newline
+
+\enquote{FFmpeg} dient als Abstraktionsebene für V4L und vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Ein entscheidender Vorteil bei der Nutzung von \enquote{FFmpeg} ist die 
+einfache Einbindung von den von Kameras unterstützten Kompressionsverfahren. Viele moderne Kameras unterstützen Formate wie \enquote{MJPEG} oder \enquote{H.264} direkt in der Hardware. Durch die Verwendung 
+entsprechender Parameter in \enquote{FFmpeg} können diese bereits komprimierten Datenströme ohne vorherige Dekodierung übernommen werden. Dies schont die Ressourcen der CPU und des Arbeitsspeichers, 
+da das System die Videodaten nicht erst rechenintensiv verarbeiten muss, solange die Videos nicht weiterverarbeitet werden müssen.
 
 \subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
 
