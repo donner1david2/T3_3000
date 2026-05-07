@@ -26,7 +26,7 @@ Erscheinungsbild durch unterschiedliche Kleidung und Posen der Spieler stark var
 Ein verbreiteter Standard für die Personenerkennung ist die Nutzung von Histogrammen orientierter Gradienten (HOG) in Kombination mit Support Vector Machines (SVM). Die HOG-Methode extrahiert Merkmale, 
 indem sie die Verteilung von Helligkeitskanten in einzelnen Bildbereichen analysiert \parencite{tam_2023_extracting}. Die Klassifizierung mittels SVM weist eine Komplexität auf, die maßgeblich von der Anzahl der Merkmale und der Anzahl der Support-Vektoren 
 bestimmt wird \parencite{_14}. Während dieses Verfahren eine deutlich höhere Robustheit gegenüber Formveränderungen des Spielers bietet als Viola-Jones, steigt die Rechenintensität durch die notwendige Berechnung der Gradientenfelder und die 
-Normalisierung der Blöcke an \parencite{tam_2023_how}.\newline
+Normalisierung der Blöcke an \parencite{tam_2023_how}. Für das Einbinden eines Trainierten SVM-Modells kann OpenCV verwendet werden. Die Bibliothek unterstützt das Anwenden eines des SVM-Modells auf einzelne Frames.\newline
 
 Für eine noch präzisere Analyse können Deformable Part Models (DPM) eingesetzt werden. Diese erweitern den HOG-basierten Ansatz, indem sie das Zielobjekt in einzelne, flexible Teile zerlegen \parencite{girshick_deformable}. Dies erlaubt eine sehr genaue 
 Erkennung von Spielern, selbst wenn Körperteile teilweise verdeckt sind oder extreme Posen eingenommen werden \parencite{girshick_deformable}. Dieser Zuwachs an Genauigkeit geht jedoch mit einer massiv erhöhten Rechenintensität bei der Ausführung einher, 
