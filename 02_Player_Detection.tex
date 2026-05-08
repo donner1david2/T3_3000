@@ -12,7 +12,7 @@ Um den Anforderungen an eine geringe CPU- und Arbeitsspeicherauslastung auf der 
 \begin{center}
     \nopagebreak
     \includesvg[width=\columnwidth]{Images/object.svg}
-    \captionof{figure}{Vergleich von Objekterkennungs Methoden anhand der Genauigkeit und der benötigten CPU Leistung}
+    \captionof{figure}{Vergleich von Objekterkennungs-Methoden anhand der Genauigkeit und der benötigten CPU Leistung}
     \label{fig:object}
 \end{center}
 
@@ -32,13 +32,14 @@ Für eine noch präzisere Analyse können Deformable Part Models (DPM) eingesetz
 Erkennung von Spielern, selbst wenn Körperteile teilweise verdeckt sind oder extreme Posen eingenommen werden \parencite{girshick_deformable}. Dieser Zuwachs an Genauigkeit geht jedoch mit einer massiv erhöhten Rechenintensität bei der Ausführung einher, 
 da für jedes Teilmodell separate Filteroperationen durchgeführt werden müssen, was die Echtzeitfähigkeit auf ressourcenbeschränkter Hardware wie dem \enquote{HB10} erschweren kann.\newline
 
-Zusammenfassend lässt sich festhalten, dass für eine Anwendung am Dart-Gerät, die auf minimalen RAM- und CPU-Verbrauch optimiert ist, die Verwendung mittels Support Vector Machines vorteilhaft ist. Für eine zuverlässige 
-Spieleranalyse unter realen Bedingungen bietet die Kombination aus HOG und SVM einen Kompromiss aus Performance und Genauigkeit.
+Zusammenfassend lässt sich festhalten, dass für eine Anwendung am Dart-Gerät, die auf minimalen RAM- und CPU-Verbrauch optimiert ist, die Verwendung von Support Vector Machines vorteilhaft ist. Für eine zuverlässige 
+Spielererkennung unter realen Bedingungen bietet die Kombination aus HOG und SVM einen Kompromiss aus Performance und Genauigkeit.
 
 \subsection{Geometrische Distanzüberprüfung zur Filterung}
 
-Um eine effiziente Verarbeitung zu gewährleisten, kann die räumliche Position eines Spielers durch eine geometrische Analyse der \enquote{Bounding Box} in Relation zur Kameraposition geschätzt werden. Anstatt eine vollständige Tiefenkarte zu berechnen, 
-wird hierbei die vertikale Position der Unterkante der \enquote{Bounding Box} als Indikator für die Nähe zum Dart-Gerät verwendet.\newline
+Um eine effiziente Verarbeitung zu gewährleisten, kann die räumliche Position eines Spielers durch eine geometrische Analyse der \enquote{Bounding Box} in Relation zur Kameraposition geschätzt werden.  
+Hierbei wird die vertikale Position der Unterkante der \enquote{Bounding Box} als Indikator für die Nähe zum Dart-Gerät verwendet. Diese Methode ist nur möglich solange der genaue Winkel der Kamera bekannt ist.
+Andernfalls können bereits kleine Abweichungen zu signifikanten Ungenauigkeiten führen.\newline
 
 Unter der Annahme, dass die Kamera in einer festen Höhe $h$ montiert ist und in einem Neigungswinkel $\alpha$ zum Boden steht, 
 lässt sich ein Schwellenwert für die y-Koordinate im Bild definieren. Dieser Schwellenwert dient dazu, Spieler zu erkennen, die sich \enquote{zu nah} an der Kamera befinden. 
