@@ -45,17 +45,16 @@ die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit mini
 \subsection{Kamera als Videoquelle} \label{sec:camera}
 
 Der Zugriff auf externe Kameras unter \enquote{Linux} erfolgt standardmäßig über die \enquote{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
-erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \enquote{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}.\newline
+erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \enquote{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}. \enquote{FFmpeg} dient als Abstraktionsebene für V4L und 
+vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Des weiteren kann \enquote{FFmpeg} auch für den Zugriff auf die codecs des Grafikprozessors verwendet werden.\newline
 
-\enquote{FFmpeg} dient als Abstraktionsebene für V4L und vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Ein entscheidender Vorteil bei der Nutzung von \enquote{FFmpeg} ist die 
-einfache Einbindung von den von Kameras unterstützten Kompressionsverfahren. Viele moderne Kameras unterstützen Formate wie \enquote{MJPEG} oder \enquote{H.264} direkt in der Hardware. Durch die Verwendung 
-entsprechender Parameter in \enquote{FFmpeg} können diese bereits komprimierten Datenströme ohne vorherige Dekodierung übernommen werden, solange die Videos nicht weiterverarbeitet werden müssen.\newline
-
-Da wir die Videos in unserem Fall weiterverarbeiten möchten, empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden.
+Da das verwendete Kamera Modell komprimierte Video Formate unterstützt, besteht die Möglichkeit, diese zu verwenden. Da wir die Videos in unserem Fall aber weiterverarbeiten möchten, 
+empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Desweiteren ist es unter der Verwendung komprimierter Video Formate schwierig die Ringbuffer Größe zu definieren,
+da die Größe jedes einzelnen Frames unterschiedlich ist, und man bei Formaten die Intraframe-Kompression verwenden, nicht garantiert werden kann, das zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.
 
 \subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
 
-Die Auswahl eines geeigneten Kompressionsverfahrens ist entscheidend für die Balance zwischen der Auslastung lokaler Ressourcen und der benötigten Netzwerkbandbreite. Da die verwendete USB-Kamera MJPEG und H.264 nativ unterstützt, 
+Die Auswahl eines geeigneten Kompressionsverfahrens für jeweils die Verarbeitung und Übertragung an den Server, ist entscheidend für die Balance zwischen der Auslastung lokaler Ressourcen und der benötigten Netzwerkbandbreite. Da das verwendete Kamera-Modell YUYV, MJPEG und H.264 unterstützt, 
 ergeben sich unterschiedliche Szenarien für die Vorverarbeitung und den Transfer \parencite{_2020_part}.\newline
 
 MJPEG basiert auf der Einzelbildkompression(Intra-Frame-Komprimierung), bei der jedes Frame unabhängig von anderen Bildern verarbeitet wird \parencite{pearson_an}. Dies führt zu einer sehr geringen Rechenlast beim Kodieren und Dekodieren, 
@@ -67,7 +66,12 @@ effiziente Reduktion der Dateigröße im Vergleich zu MJPEG \parencite{kalva_the
 mittels VA-API oder der AMF-Schnittstelle direkt auf die GPU ausgelagert werden \parencite{_2026_ffmpeg, gpuopenlibrariessdks_2025_amf_video_encode_api}. Dies schont die CPU-Ressourcen und den Arbeitsspeicher während des Betriebs \parencite{_2025_amd}.\newline
 
 H.265 erreicht bei gleicher visueller Qualität eine noch stärkere Kompression als H.264, was die benötigte Bandbreite für die Übertragung an einen Server weiter minimiert \parencite{putra_2023_interframe}. Allerdings ist 
-die algorithmische Komplexität von H.265 deutlich höher. Da die Kamera selbst kein H.265 liefert, müssten die Daten auf dem lokalen System zunächst empfangen und anschließend mit der GPU in das H.265-Format 
-umgewandelt werden \parencite{_2025_amd}. Ein solches Vorgehen ist sinnvoll, wenn die Einsparung von Speicherplatz und Rechenleistung auf dem Server und die Reduktion der Übertragungskosten Vorrang vor der minimalen Latenz auf dem lokalen Gerät haben.\newline
+die algorithmische Komplexität von H.265 deutlich höher. Dieses Format ist sinnvoll, wenn die Einsparung von Speicherplatz und Rechenleistung auf dem Server und die Reduktion der Übertragungskosten Vorrang vor der minimalen Latenz auf dem lokalen Gerät haben.\newline
+
+Neben den komprimierten Formaten bietet das YUYV-Pixelformat eine unkomprimierte Alternative für den Zugriff auf Kameradaten \parencite{_2020_part}. Ein wesentlicher Vorteil dieses Formats liegt darin, dass die Einzelbilder für die weitere Verarbeitung 
+nicht erst dekodiert werden müssen, was lokale Rechenressourcen entlastet. Zudem ist jeder Frame innerhalb des Datenstroms exakt gleich groß, was die Berechnung der benötigten Ringbuffer-Größe für spezifische Videolängen vereinfacht. 
+Demgegenüber steht jedoch der Nachteil eines vergleichsweise hohen Speicherbedarfs, da keinerlei Reduzierung der Datenmenge stattfindet\newline
+
+Für die Übertragung an den Server bietet sich H.265 an, da es die benötigte Bandbreite im Verglich zu den anderen Formaten am besten reduziert. Für die Verarbeitung auf dem HB10 im Gegensatz, erscheint YUYV am sinnvollsten, da durch dessen Verwendung die häufige Dekomprimierung entfällt.
 
 \vspace{1em}
