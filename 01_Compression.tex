@@ -1,12 +1,19 @@
 % !TeX root = t3_3000.tex
 
+\begin{figure*}[t]
+    \centering
+    \includesvg{Images/Ringbuffer.svg}
+    \caption{testcaption}
+    \label{fig:ringbuffer}
+\end{figure*}
+
 \section{Video- Aufnahme und Komprimierung} \label{sec:1}
 
-Die Realisierung einer stabilen Videoaufnahme für den \enquote{HB10} erfordert eine performante Interaktion zwischen Hardware und Software. Da die hohen Datenraten unkomprimierter Videostreams die 
-Systemressourcen des \enquote{HB10} bei gleichzeitiger Ausführung anderer Prozesse auslasten könnten, ist eine effiziente Komprimierung der Daten notwendig.\newline
+Die Realisierung einer stabilen Videoaufnahme für den HB10 erfordert eine performante Interaktion zwischen Hardware und Software. Da die hohen Datenraten unkomprimierter Videostreams die 
+Systemressourcen des HB10 bei gleichzeitiger Ausführung anderer Prozesse auslasten könnten, ist eine effiziente Komprimierung der Daten notwendig.\newline
 
 Zur Minimierung der Prozessorlast und des Arbeitsspeicherverbrauchs bieten sich hardwaregestützte Kodierungsverfahren an. Diese verlagern die rechenintensiven Kompressionsalgorithmen vom Hauptprozessor auf 
-dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im Kontext der im \enquote{HB10} eingebauten APU relevant, 
+dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im Kontext der im HB10 eingebauten APU relevant, 
 da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügt \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Des weiteren, ist es auch nicht nötig, den Gesamten Spielablauf aufzunehmen. 
 Es ist ausreichend, Videoausschnitte der einzelnen Würfe zu speichern. Im Folgenden werden die technischen Grundlagen des Kamerazugriffs sowie die Auswahl geeigneter Kompressionsverfahren unter Berücksichtigung der Hardwarebeschleunigung erläutert.
 
@@ -23,18 +30,18 @@ Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
 
 \subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
 
-Das \enquote{HB10} besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera (Modell: ELP-USB3MP01H-L29) unterstützt die Video Formate \enquote{MJPEG} \enquote{YUYV} und \enquote{H.264} in verschiedenen Auflösungen und Wiederholraten,
+Das HB10 besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera (Modell: ELP-USB3MP01H-L29) unterstützt die Video Formate \enquote{MJPEG} \enquote{YUYV} und \enquote{H.264} in verschiedenen Auflösungen und Wiederholraten,
 in Abhängigkeit der Formate.
 
 Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. 
-Der Grafikprozessor des \enquote{HB10} unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000,_2026_r1000}.\newline
+Der Grafikprozessor des HB10 unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000,_2026_r1000}.\newline
 
 Die in der APU integrierte VCN-Einheit (\enquote{Video Core Next}) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
 wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \enquote{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
 die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}. Da die eingesetzte USB-Kamera nativ MJPEG, H.264 und YUYV unterstützt, 
 kann das Videomaterial entweder direkt verarbeitet, oder mittels VA-API effizient in ein Format mit höherer Kompressionsrate umgewandelt werden, ohne den Arbeitsspeicher oder die Prozessorleistung übermäßig zu beanspruchen \parencite{kalva_the, pearson_an}.\newline
 
-Die Komprimierung der Videos, muss nur vorgenommen werden, solange der \enquote{HB10} die Videos verarbeiten muss, wie beispielsweise das Anwenden von Objekterkennungsalgorithmen. Da aber noch nicht festgelegt wurde, ob dies der Fall benötigt wird,
+Die Komprimierung der Videos, muss nur vorgenommen werden, solange der HB10 die Videos verarbeiten muss, wie beispielsweise das Anwenden von Objekterkennungsalgorithmen. Da aber noch nicht festgelegt wurde, ob dies der Fall benötigt wird,
 besteht auch die Möglichkeit, die Formate anzuwenden, die von der Kamera unterstützt werden.
 
 \subsection{Kamera als Videoquelle} \label{sec:camera}
