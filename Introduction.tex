@@ -2,21 +2,19 @@
 
 \section{Einleitung}
 
-Die Erweiterung des E-Dart Gerät \enquote{LÖWEN DART HB10} \parencite{lwenentertainment_2026_lwen}, um eine Turnierfunktion mit Preisgeldern erfordert Mechanismen die sicherstellen das die sportliche Integrität gewährleistet wird.
+Das E-Dart Gerät \enquote{LÖWEN DART HB10} stellt ein System dar, das bereits umfangreiche Funktionen für den Spielbetrieb bietet \parencite{lwenentertainment_2026_lwen}. Hierzu zählen neben dem Bereitstellung verschiedener Dart-Spiele die Erfassung von Spielerstatistiken 
+die Bereitstellung von Daten über eine mobile Applikation sowie ein Verwaltungsportal für Aufsteller. Ein zentraler Aspekt des aktuellen Betriebs sind die \enquote{3K}-Turniere, bei denen alle Teilnehmer zeitgleich an demselben Gerät agieren 
+und die Spielergebnisse direkt nach Abschluss der Partie übertragen werden.\newline
 
-Das \enquote{HB10} bietet bereits umfangreiche Funktionen zur Vernetzung und statistischen Auswertung. Hierzu gehört das Tracking von Statistiken eingeloggter Spieler die an einen Server gesendet werden, und innerhalb einer dedizierten Applikation der 
-\enquote{LÖWEN Dart App} bereitgestellt werden. Für Aufsteller besteht über das sogenannte \enquote{Dartportal} die Möglichkeit, Gerätedaten sowie Statistiken abzurufen und zukünftig Konfigurationen am \enquote{HB10} vorzunehmen. 
-Ein wesentlicher Bestandteil des aktuellen Betriebs sind zentral organisierte Turniere und Ligen, die unter der Bezeichnung \enquote{3K} geführt werden. Diese werden automatisiert am Gerät aufgerufen, wobei alle Spieler einer Partie 
-gleichzeitig am selben \enquote{HB10} agieren und die Ergebnisse direkt nach Abschluss übertragen werden.\newline
+In Zukunft soll dieses System um asynchrone Turnierformate und Ranglisten ergänzt werden, bei denen die Möglichkeit besteht, Preisgelder zu gewinnen. Im Gegensatz zu den bestehenden Formaten ist hierbei keine gleichzeitige Anwesenheit der Spieler erforderlich. 
+Da die Wettbewerbe ortsungebunden durchgeführt werden können, ist eine visuelle Verifikation der sportlichen Integrität erforderlich. Um Manipulationen am Spielausgang zu verhindern, wird eine Funktion zur Videoaufnahme der Spieler sowie der Dartscheibe benötigt. 
+Da diese Kamerasysteme bisher nicht installiert sind, müssen geeignete Wege zur Integration gefunden werden, um die Aufnahmen zur Validierung an einen zentralen Server zu senden.\newline
 
-Zukünftig soll dieses System um \enquote{asynchrone} Turniere und Ranglisten ergänzt werden, bei denen die Gewinnmöglichkeit von Preisgeldern besteht. Im Gegensatz zu den \enquote{3K}-Spielen ist bei diesen Formaten keine gleichzeitige 
-Anwesenheit der Spieler erforderlich. Die Wettbewerbe können über verschiedene Standorte verteilt durchgeführt werden, was eine visuelle Verifikation der Spieler und der Korrektheit der Spiele notwendig macht. Um Manipulationen vorzubeugen, 
-wird eine Funktion zur Videoaufnahme der Spieler sowie der Dartscheibe benötigt. Diese Aufnahmen müssen zentral gespeichert werden, um eine nachträgliche Kontrolle und Validierung der Ergebnisse zu ermöglichen.
-Ziel dieser Arbeit ist die Untersuchung effizienter Methoden zur Einbindung der Kameras und der Implementierung der angesprochenen Videofunktionalität auf dem \enquote{HB10}.\newline
-
+Ziel dieser Arbeit ist die Untersuchung effizienter Methoden zur Implementierung dieser Videofunktionalität auf dem HB10. 
 Der Fokus liegt hierbei auf einem ressourcenschonenden Zugriff auf die Aufnahmen der Kameras sowie einer performanten Kompression zur Entlastung von Prozessor und 
 Arbeitsspeicher während der Verarbeitung. Des Weiteren wird untersucht, inwieweit simple Algorithmen zur automatisierten Erkennung von Manipulationsversuchen, wie die Entfernung des Spielers zur Scheibe,
 in das System integriert werden können. Ein zentraler Aspekt der Untersuchung betrifft die Optimierung der Videoübertragung an einen Server. 
 Hierbei werden Verfahren evaluiert, die sowohl die benötigte Bandbreite als auch die CPU-Auslastung des Servers minimieren, um einen ökonomischen und stabilen Betrieb sicher zu stellen.
 
 \vspace{1em}
+
