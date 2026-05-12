@@ -2,7 +2,7 @@
 
 \section{Übertragung an einen Server}
 
-Nachdem die Videos Verarbeitet und Komprimiert wurden, müssen sie an einen Server Übertragen werden, über die Spieler im Nachhinein Zugriff auf sie erhalten.
+Nachdem die Videos verarbeitet und komprimiert wurden, müssen sie an einen Server übertragen werden, über die Spieler im Nachhinein Zugriff auf sie erhalten.
 Die Übermittlung der erfassten Videodaten an eine Serverinstanz stellt eine zentrale Herausforderung für die Effizienz des Gesamtsystems dar. Ein primäres Forschungsziel ist die Minimierung der Bandbreitennutzung bei der Übertragung, 
 da mit Tausenden von HB10-Clients zu rechnen ist, die gleichzeitig Videos an den Server übertragen. Davon entkoppelt 
 ist die Anforderung, die Rechenlast auf dem Server so gering wie möglich zu halten, was durch eine clientseitige Vorverarbeitung und Kompression erreicht werden kann. \newline
@@ -34,9 +34,9 @@ Eine etablierte Methode für die sichere Übertragung ist das \textit{Secure Cop
 Servern \parencite{ylonen_2006_rfc, _2020_scp}. Eine funktionsreichere Alternative stellt SFTP dar, welches ebenfalls die SSH-Infrastruktur nutzt, darüber hinaus aber erweiterte Dateiverwaltungsfunktionen bietet 
 \parencite{_2025_sftp}. Beide Verfahren verursachen jedoch durch die kryptografischen Operationen eine gewisse CPU-Auslastung auf dem sendenden System und dem Server.\newline  
 
-Für eine nahtlose Integration in webbasierte REST-Architekturen kann die Übertragung alternativ mittels HTTP-Requests vom Typ multipart/form-data realisiert werden \parencite{_2026_file, muhibullah_2024_understanding}. 
+Für eine nahtlose Integration in webbasierte REST-Architekturen kann die Übertragung alternativ mittels HTTP-Anfragen vom Typ multipart/form-data realisiert werden \parencite{_2026_file, muhibullah_2024_understanding}. 
 Dieser Standard wird für Datei-Uploads verwendet und lässt sich ressourcenschonend mit gängigen Webservern oder Object-Storage Servern verarbeiten \parencite{muhibullah_2024_understanding}.\newline  
 
 Als finales Zielsystem für die Datenspeicherung auf Serverseite könnte Object-Storage infrage kommen \parencite{_what}. Im Gegensatz zu klassischen, hierarchischen Dateisystemen werden Daten in diesem Ansatz als Objekte 
 mit zugehörigen Metadaten in einem flachen Adressraum abgelegt \parencite{susnjara_2025_object, _2025_what}. Dies erweist sich bei der Archivierung von großen Mengen an unstrukturierten Daten, wie es bei Videodateien der Fall ist, 
-als hochgradig skalierbar \parencite{susnjara_2025_object}. Die Übertragung in einen Objektspeicher erfolgt in der Regel direkt über standardisierte HTTP-APIs, wodurch zusätzliche serverseitige Umwege über Dateisystem-Mounts entfallen könnten.
+als hochgradig skalierbar \parencite{susnjara_2025_object}. Die Übertragung an einen Objekt-Storage Server erfolgt in der Regel direkt über standardisierte HTTP-APIs, wodurch zusätzliche serverseitige Umwege über Dateisystem-Mounts entfallen könnten.

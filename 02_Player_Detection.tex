@@ -2,10 +2,10 @@
         
 \section{Effiziente Objekterkennung zur Analyse am Dart-Gerät}
 
-Da wir die Videos für die Händische Überprüfung der Spiele aufnehmen, bietet es sich an, diese Videos vorher Maschinell zu überprüfen und \enquote{Verdächtige} Spiele zu markieren. Dabei kann mittels Objekterkennung 
-kann die Position des Spielers festgestellt werden. Mit der Position kann man prüfen ob der Spieler hinter der Abwurflinie steht, des weiteren kann man alles abgesehen von dem Spieler ausblenden, 
+Da wir die Videos für die Händische Überprüfung der Spiele aufnehmen, bietet es sich an, diese Videos vorher maschinell zu überprüfen und \enquote{Verdächtige} Spiele zu markieren. Dabei kann mittels Objekterkennung 
+kann die Position des Spielers festgestellt werden. Mit der Position kann man prüfen, ob der Spieler hinter der Abwurflinie steht, des Weiteren kann man alles abgesehen von dem Spieler ausblenden, 
 um mögliche Datenschutz Verletzungen durch das Aufnehmen von sich im Hintergrund befindenden Personen vorzubeugen. Man könnte auch alles außer dem Spieler abschneiden, und müsste somit eine kleinere Datenmenge übertragen, um Bandbreite zu sparen.
-Durch die Lokalisierung des Spielers im Kamerabild kann theoretisch mathematisch geprüft werden, ob die Distanz zum Dart-Gerät in etwa den Regeln entspricht, solange sicher gestellt werden kann, in welchem Winkel die Kamera zum Boden steht. 
+Durch die Lokalisierung des Spielers im Kamerabild kann theoretisch mathematisch geprüft werden, ob die Distanz zum Dart-Gerät in etwa den Regeln entspricht, solange sichergestellt werden kann, in welchem Winkel die Kamera zum Boden steht. 
 Um den Anforderungen an eine geringe CPU- und Arbeitsspeicherauslastung auf der Zielhardware gerecht zu werden, müssen die untersuchten Verfahren eine niedrige algorithmische Komplexität aufweisen \parencite{_14, _2025_amd}.\newline
 
 \subsection{Methodenvergleich zur effizienten Objekterkennung am Dart-Gerät}
@@ -31,15 +31,15 @@ Spielererkennung unter realen Bedingungen bietet die Kombination aus HOG und SVM
 
 \subsection{Geometrische Distanzüberprüfung zur Filterung}
 
-Da man theoretisch die Videos maschinell überprüfen könnte. Wäre ein Punkt den man sich anschauen könnte die Entfernung des Spielers zu der Dartscheibe.
-Dabei kann um eine effiziente Verarbeitung zu gewährleisten, die räumliche Position eines Spielers durch eine geometrische Analyse der Bounding Box in Relation zur Kameraposition errechnet werden.  
-Hierbei wird die vertikale Position der Unterkante der Bounding Box als Indikator für die Nähe zum Dart-Gerät verwendet. Diese Methode ist nur möglich solange der genaue Winkel der Kamera bekannt ist.
+Da man theoretisch die Videos maschinell überprüfen könnte, wäre ein Punkt, den man untersuchen könnte, die Entfernung des Spielers zu der Dartscheibe.
+Dabei kann um eine effiziente Verarbeitung zu gewährleisten, die räumliche Position eines Spielers durch eine geometrische Analyse der Bounding-Box in Relation zur Kameraposition errechnet werden.  
+Hierbei wird die vertikale Position der Unterkante der Bounding-Box als Indikator für die Nähe zum Dart-Gerät verwendet. Diese Methode ist nur möglich solange der genaue Winkel der Kamera bekannt ist.
 Andernfalls können bereits kleine Abweichungen zu signifikanten Ungenauigkeiten führen.\newline
 
 Um die Entfernung zu berechnen, stehen uns Informationen zu der Kamera Höhe, den Kamera Winkel zum Boden, der Bildwinkel der Kamera und die Bildhöhe in Pixeln zur Verfügung. Dabei ist vorausgesetzt, dass ein Sensor
-existiert der den Winkel der Kamera liefert, oder diese in 100 Prozent der Fälle in einem exakten vordefinierten Winkel installiert werden kann. Die Position der Füße eines Spielers, kann mithilfe von Objekterkennungs-Algorithmen
-erkannt werden. Dazu werden Im vorherigen Kapitel angesprochene Algorithmen verwendet, um einen Spieler zu lokalisieren, und eine Bounding Box um diesen zu platzieren. Im anschluss liefert uns die Unterkante der Bounding Box
-die Position der Füße des Spielers im Video. Diese Parameter sind ausreichend, um die Entfernung des Spielers zum Dart zu berechnen\parencite{joglekar_2011_depth}, und ermöglicht uns zu Überprüfen ob ein Spieler \enquote{zu nah} an der Dart-Scheibe steht.
+existiert, der den Winkel der Kamera liefert, oder diese in 100 Prozent der Fälle in einem exakten vordefinierten Winkel installiert werden kann. Die Position der Füße eines Spielers, kann mithilfe von Objekterkennungs-Algorithmen
+erkannt werden. Dazu werden Im vorherigen Kapitel angesprochene Algorithmen verwendet, um einen Spieler zu lokalisieren, und eine Bounding-Box um diesen zu platzieren. Im anschluss liefert uns die Unterkante der Bounding-Box
+die Position der Füße des Spielers im Video. Diese Parameter sind ausreichend, um die Entfernung des Spielers zum Dart zu berechnen \parencite{joglekar_2011_depth}, und ermöglicht uns zu überprüfen ob ein Spieler \enquote{zu nah} an der Dart-Scheibe steht.
 Videos in denen die Entfernung des Spielers zu der Dartscheibe des HB10 einen bestimmten Schwellenwert unterschreitet, können als \enquote{Verdächtig} markiert werden.
 
 \vspace{1em}
