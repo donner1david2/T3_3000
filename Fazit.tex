@@ -2,10 +2,10 @@
 
 \section{Schlussbetrachtung}
 
-Die vorliegende Untersuchung zeigt theoretische Möglichkeiten auf, eine ressourceneffiziente Videoverarbeitungskette unter Linux zu realisieren. Ein direkter Zugriff auf USB-Kameras ist mittels \textit{ffmpeg} möglich. Um CPU und RAM zu entlasten, bietet sich die hardwarebeschleunigte Enkodierung mittels \textit{VA-API} an, welche speziell auf Hardware wie der 
-AMD Ryzen R1000 Serie effizient operiert.\newline
+Die Arbeit hat einen Überblick gegeben, mit Welchen Methoden die Integration von Kameras für die Überprüfung der sportlichen Integrität realisiert werden könnte. Eine Plausible Implementierung könnte Beispielsweise wie Folgt aufgebaut sein.
 
-Für die Detektion von Spielern stellen Histogram of Oriented Gradients in Verbindung mit Support Vector Machines einen bewährten, rechenarmen Ansatz dar. 
+Ein direkter Zugriff auf die Kameras wäre mittels \textit{ffmpeg} möglich. Um CPU und RAM zu entlasten, bietet sich die hardwarebeschleunigte Kodierung über die\textit{VA-API} an, welche speziell auf Hardware wie der 
+AMD Ryzen R1000 Serie effizient operiert. Für die Detektion von Spielern stellen Histogram of Oriented Gradients in Verbindung mit Support Vector Machines einen bewährten, rechenarmen Ansatz dar. 
 Die anschließende Übertragung an einen Server kann mittels Übertragung über REST-Schnittstellen an einen Object-Storage Server realisiert werden.
 
 \vspace{1em}

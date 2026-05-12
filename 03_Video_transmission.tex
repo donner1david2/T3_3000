@@ -2,40 +2,41 @@
 
 \section{Übertragung an einen Server}
 
+Nachdem die Videos Verarbeitet und Komprimiert wurden, müssen sie an einen Server Übertragen werden, über die Spieler im Nachhinein Zugriff auf sie erhalten.
 Die Übermittlung der erfassten Videodaten an eine Serverinstanz stellt eine zentrale Herausforderung für die Effizienz des Gesamtsystems dar. Ein primäres Forschungsziel ist die Minimierung der Bandbreitennutzung bei der Übertragung, 
-da mit Tausenden von \enquote{HB10}-Clients zu rechnen ist, die gleichzeitig Videos an den Server übertragen. Davon entkoppelt 
+da mit Tausenden von HB10-Clients zu rechnen ist, die gleichzeitig Videos an den Server übertragen. Davon entkoppelt 
 ist die Anforderung, die Rechenlast auf dem Server so gering wie möglich zu halten, was durch eine clientseitige Vorverarbeitung und Kompression erreicht werden kann. \newline
 
-Da die spezifische Serverart derzeit noch nicht definiert ist, kommen verschiedene Übertragungsmodelle in Betracht. Für eine dateibasierte Speicherung in einem \enquote{Object Storage} \parencite{susnjara_2025_object} bieten sich Verfahren wie 
-\enquote{multipart/form-data} \parencite{muhibullah_2024_understanding} oder das \enquote{Secure Copy Protocol} \parencite{_2020_scp} an. Alternativ könnten Streaming-Protokolle wie \enquote{SRT} \parencite{haivision_2025_srtdocsreadmemd} oder 
-\enquote{RTMP} \parencite{_2023_was} für eine kontinuierliche Datenübermittlung untersucht werden.
+Da die spezifische Serverart derzeit noch nicht definiert ist, kommen verschiedene Übertragungsmodelle in Betracht. Für eine dateibasierte Speicherung in einem \textit{Object-Storage} \parencite{susnjara_2025_object} bieten sich Verfahren wie 
+\textit{multipart/form-data} \parencite{muhibullah_2024_understanding} oder das \textit{SSH File Transfer Protocol} (SFTP)\parencite{_2020_scp} an. Alternativ könnten Streaming-Protokolle wie \textit{Secure Reliable Transport} (SRT)\parencite{haivision_2025_srtdocsreadmemd} oder 
+\textit{Real-Time Messaging Protocol} (RTMP) \parencite{_2023_was} für eine kontinuierliche Datenübermittlung untersucht werden.
 
-\subsection{Streaming-Protokolle am Beispiel von RTMP}
+\subsection{Streaming-Protokolle}
 
-Für die Übertragung von Videodaten an einen Server könnten verschiedene Streaming-Protokolle herangezogen werden. Das \enquote{Real-Time Messaging Protocol} (RTMP) ist hierbei ein etablierter Standard \parencite{byrd_2026_what}. 
+Für die Übertragung von Videodaten an einen Server könnten verschiedene Streaming-Protokolle herangezogen werden. Das RTMP ist hierbei ein etablierter Standard \parencite{byrd_2026_what}. 
 Es bietet eine geringe Latenz \parencite{skavish_2022_ein} und nutzt TCP, um sicherzustellen, dass Datenpakete in der richtigen Reihenfolge ankommen \parencite{_2023_was}.\newline  
 
-Alternativ könnte \enquote{HTTP Live Streaming} (HLS) verwendet werden, welches einen Videostream in segmentierte kleine Dateien aufteilt und diese über Standard-HTTP ausliefert \parencite{_2026_eigener}. Für unzuverlässige Netzwerke bietet 
-sich das Protokoll SRT (\enquote{Secure Reliable Transport}) an, da es darauf ausgelegt ist, Videodaten sicher und mit minimaler Verzögerung zu transportieren \parencite{haivision_2025_srtdocsreadmemd}. Weiterhin könnte HTTP/3 zum Einsatz kommen,
+Alternativ könnte \textit{HTTP Live Streaming} (HLS) verwendet werden, welches einen Videostream in segmentierte kleine Dateien aufteilt und diese über Standard-HTTP ausliefert \parencite{_2026_eigener}. Für unzuverlässige Netzwerke bietet 
+sich das Protokoll SRT an, da es darauf ausgelegt ist, Videodaten sicher und mit minimaler Verzögerung zu transportieren \parencite{haivision_2025_srtdocsreadmemd}. Weiterhin könnte HTTP/3 zum Einsatz kommen,
 welches auf dem UDP-basierten QUIC-Protokoll basiert und Verbindungsaufbauzeiten sowie Latenzen gegenüber klassischen TCP-Verbindungen deutlich reduziert \parencite{_2021_was, iyengar_2021_rfc, litespeedtech_2026_github}.\newline  
 
 Trotz dieser Eigenschaften weisen Streaming-Protokolle für den spezifischen Anwendungsfall der asynchronen Speicherung von Kameraaufzeichnungen entscheidende Nachteile auf. Protokolle wie RTMP setzen eine durchgehend stabile Verbindung 
-voraus \parencite{_2023_was} und sind architektonisch auf die sofortige Auslieferung an Endgeräte optimiert, nicht aber auf eine effiziente Dateispeicherung \parencite{skavish_2022_ein}. Die Segmentierung bei HLS \parencite{_2026_eigener} oder die 
-zusätzliche Logik zur Fehlerkorrektur bei SRT \parencite{haivision_2025_srtdocsreadmemd} verursachen zusätzlichen Overhead. Wenn das primäre Ziel darin besteht, ein komprimiertes Video bandbreiten- und ressourcenschonend auf einem Server abzulegen, 
-binden diese Protokolle unnötig CPU-Kapazitäten sowohl auf dem sendenden System als auch auf dem Server. Für die reine Archivierung von Dateien bieten dateibasierte Übertragungsprotokolle eine deutlich ressourceneffizientere Alternative. 
+voraus \parencite{_2023_was} und sind auf die sofortige Auslieferung an Endgeräte optimiert, nicht aber auf eine effiziente Dateispeicherung \parencite{skavish_2022_ein}. Die Segmentierung bei HLS \parencite{_2026_eigener} oder die 
+zusätzliche Logik zur Fehlerkorrektur bei SRT \parencite{haivision_2025_srtdocsreadmemd} verursachen zusätzlichen Overhead. Wenn das primäre Ziel darin besteht, ein komprimiertes Video bandbreiten- und ressourcenschonend an einen Server zu übertragen, 
+verbrauchen diese Protokolle unnötig CPU-Kapazitäten sowohl auf dem sendenden System als auch auf dem Server. Für die reine Archivierung von Dateien bieten dateibasierte Übertragungsprotokolle eine deutlich ressourceneffizientere Alternative. 
 
 \subsection{Dateibasierte Übertragungsverfahren}
 
 Im Gegensatz zu den ressourcenintensiven Streaming-Protokollen bieten dateibasierte Übertragungsverfahren eine effizientere Möglichkeit, komprimierte Videodateien an einen Server zu senden und dort langfristig zu speichern. Da die Videos nach der 
 Aufnahme bereits in komprimierter Form vorliegen, entfällt bei einer solchen Übertragung der Overhead für eine Echtzeit-Synchronisation.\newline
 
-Eine etablierte Methode für die sichere Übertragung ist das \enquote{Secure Copy Protocol} (SCP) \parencite{_2020_scp, _2025_scp}. Dieses Protokoll basiert auf SSH und ermöglicht eine verschlüsselte Kopie von Dateien zwischen lokalen Systemen und entfernten 
-Servern \parencite{ylonen_2006_rfc, _2020_scp}. Eine funktionsreichere Alternative stellt das \enquote{SSH File Transfer Protocol} (SFTP) dar, welches ebenfalls die SSH-Infrastruktur nutzt, darüber hinaus aber erweiterte Dateiverwaltungsfunktionen bietet 
+Eine etablierte Methode für die sichere Übertragung ist das \textit{Secure Copy Protocol} SCP \parencite{_2020_scp, _2025_scp}. Dieses Protokoll basiert auf SSH und ermöglicht eine verschlüsselte Kopie von Dateien zwischen lokalen Systemen und entfernten 
+Servern \parencite{ylonen_2006_rfc, _2020_scp}. Eine funktionsreichere Alternative stellt SFTP dar, welches ebenfalls die SSH-Infrastruktur nutzt, darüber hinaus aber erweiterte Dateiverwaltungsfunktionen bietet 
 \parencite{_2025_sftp}. Beide Verfahren verursachen jedoch durch die kryptografischen Operationen eine gewisse CPU-Auslastung auf dem sendenden System und dem Server.\newline  
 
-Für eine nahtlose Integration in webbasierte REST-Architekturen kann die Übertragung alternativ mittels HTTP-Requests vom Typ \enquote{multipart/form-data} realisiert werden \parencite{_2026_file, muhibullah_2024_understanding}. 
-Dieser Standard wird nativ für Datei-Uploads verwendet und lässt sich ressourcenschonend mit gängigen Webservern verarbeiten \parencite{muhibullah_2024_understanding}.\newline  
+Für eine nahtlose Integration in webbasierte REST-Architekturen kann die Übertragung alternativ mittels HTTP-Requests vom Typ multipart/form-data realisiert werden \parencite{_2026_file, muhibullah_2024_understanding}. 
+Dieser Standard wird für Datei-Uploads verwendet und lässt sich ressourcenschonend mit gängigen Webservern oder Object-Storage Servern verarbeiten \parencite{muhibullah_2024_understanding}.\newline  
 
-Als finales Zielsystem für die Datenspeicherung auf Serverseite könnte ein \enquote{Object Storage} evaluiert werden \parencite{_what}. Im Gegensatz zu klassischen, hierarchischen Dateisystemen werden Daten in diesem Ansatz als Objekte 
-mit zugehörigen Metadaten in einem flachen Adressraum abgelegt \parencite{susnjara_2025_object, _2025_what}. Dies erweist sich insbesondere bei der Archivierung von großen Mengen an unstrukturierten Daten, wie es bei Videodateien der Fall ist, 
+Als finales Zielsystem für die Datenspeicherung auf Serverseite könnte Object-Storage infrage kommen \parencite{_what}. Im Gegensatz zu klassischen, hierarchischen Dateisystemen werden Daten in diesem Ansatz als Objekte 
+mit zugehörigen Metadaten in einem flachen Adressraum abgelegt \parencite{susnjara_2025_object, _2025_what}. Dies erweist sich bei der Archivierung von großen Mengen an unstrukturierten Daten, wie es bei Videodateien der Fall ist, 
 als hochgradig skalierbar \parencite{susnjara_2025_object}. Die Übertragung in einen Objektspeicher erfolgt in der Regel direkt über standardisierte HTTP-APIs, wodurch zusätzliche serverseitige Umwege über Dateisystem-Mounts entfallen könnten.

@@ -22,35 +22,36 @@ Es ist ausreichend, Videoausschnitte der einzelnen Würfe zu speichern. Im Folge
 \subsection{Video-Komprimierungsalgorithmen} \label{sec:compression}
 
 In der Videoverarbeitung wird grundlegend zwischen Intra-Frame- und Inter-Frame-Komprimierung unterschieden. Bei der Intra-Frame-Komprimierung wird jedes Bild einzeln bearbeitet. Hierbei lassen sich Daten einsparen, 
-indem Informationen innerhalb eines Bildes zusammengefasst oder Details entfernt werden, die das menschliche Auge kaum wahrnehmen kann. Ein Beispiel hierfür ist der \enquote{MJPEG}-Standard, 
-der das \enquote{YCbCr}-Farbmodell verwendet. Dabei wird die Helligkeit detailliert gespeichert, während die Farbinformationen reduziert werden \parencite{pearson_an}. \newline
+indem Informationen innerhalb eines Bildes zusammengefasst oder Details entfernt werden, die das menschliche Auge kaum wahrnehmen kann. Ein Beispiel hierfür ist der \textit{MJPEG}-Standard, 
+der das \textit{YCbCr}-Farbmodell verwendet. Dabei wird die Helligkeit detailliert gespeichert, während die Farbinformationen reduziert werden \parencite{pearson_an}. \newline
 
 Zusätzlich kann die Inter-Frame-Komprimierung genutzt werden, um die zeitlichen Ähnlichkeiten zwischen aufeinanderfolgenden Bildern zu verwenden. Anstatt jedes Bild vollständig zu speichern,
-werden oft nur die Unterschiede zum vorherigen Bild aufgezeichnet \parencite{putra_2023_interframe}. Der Standard \enquote{H.264} setzt dieses Prinzip durch \enquote{I-Frames} und \enquote{P-Frames} um. 
-Während ein \enquote{I-Frame} das gesamte Bild enthält, speichern die folgenden \enquote{P-Frames} lediglich die Veränderungen zum vorangegangenen Bild \parencite{kalva_the}. Dieses
+werden oft nur die Unterschiede zum vorherigen Bild aufgezeichnet \parencite{putra_2023_interframe}. Der Standard \textit{H.264} setzt dieses Prinzip durch \textit{I-Frames} und \textit{P-Frames} um. 
+Während ein I-Frame das gesamte Bild enthält, speichern die folgenden P-Frames lediglich die Veränderungen zum vorangegangenen Bild \parencite{kalva_the}. Dieses
 Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
 
 \subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
 
-Das HB10 besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera (Modell: ELP-USB3MP01H-L29) unterstützt die Video Formate \enquote{MJPEG} \enquote{YUYV} und \enquote{H.264} in verschiedenen Auflösungen und Wiederholraten,
+Das HB10 besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera (Modell: ELP-USB3MP01H-L29) unterstützt die Video Formate MJPEG \textit{YUYV} und H.264 in verschiedenen Auflösungen und Wiederholraten,
 in Abhängigkeit der Formate.\newline
 
 Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU-Leistung beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter Video Komprimierung durchführen kann. 
 Der Grafikprozessor des HB10 unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000,_2026_r1000}.\newline
 
-Die in der APU integrierte VCN-Einheit (\enquote{Video Core Next}) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
-wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \enquote{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
+Die in der APU integrierte VCN-Einheit (Video Core Next) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
+wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \textit{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
 die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}.
 
 \subsection{Kamera als Videoquelle} \label{sec:camera}
 
-Der Zugriff auf externe Kameras unter \enquote{Linux} erfolgt standardmäßig über die \enquote{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
-erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \enquote{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}. \enquote{FFmpeg} dient als Abstraktionsebene für V4L und 
-vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Des weiteren kann \enquote{FFmpeg} auch für den Zugriff auf die codecs des Grafikprozessors verwendet werden.\newline
+Bisher gab es keine Notwendigkeit, für eine Kamera am HB10, deshalb besteht noch keine Schnittstelle für den Zugriff auf diese.
+Der Zugriff erfolgt unter Linux standardmäßig über die \textit{Video for Linux} (V4L) Schnittstelle des Kernels \parencite{_2020_part}. Diese API ermöglicht eine direkte Kommunikation mit dem Videogerät, 
+erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \textit{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}. FFmpeg dient als Abstraktionsebene für V4L und 
+vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Des weiteren kann FFmpeg auch für den Zugriff auf die codecs des Grafikprozessors verwendet werden.\newline
 
 Da das verwendete Kamera Modell komprimierte Video Formate unterstützt, besteht die Möglichkeit, diese zu verwenden. Da wir die Videos in unserem Fall aber weiterverarbeiten möchten, 
-empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Desweiteren ist es unter der Verwendung komprimierter Video Formate schwierig die Ringbuffer Größe zu definieren,
-da die Größe jedes einzelnen Frames unterschiedlich ist, und man bei Formaten die Intraframe-Kompression verwenden, nicht garantiert werden kann, das zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.
+empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Des weiteren ist es unter der Verwendung komprimierter Video Formate schwierig die Ringbuffer Größe zu definieren,
+da die Größe jedes einzelnen Frames unterschiedlich ist, und man bei Formaten die Intra-frame-Kompression verwenden, nicht garantiert werden kann, das zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.
 
 \subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
 
