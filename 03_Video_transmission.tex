@@ -18,7 +18,7 @@ Es bietet eine geringe Latenz \parencite{skavish_2022_ein} und nutzt TCP, um sic
 
 Alternativ könnte \textit{HTTP Live Streaming} (HLS) verwendet werden, welches einen Videostream in segmentierte kleine Dateien aufteilt und diese über Standard-HTTP ausliefert \parencite{_2026_eigener}. Für unzuverlässige Netzwerke bietet 
 sich das Protokoll SRT an, da es darauf ausgelegt ist, Videodaten sicher und mit minimaler Verzögerung zu transportieren \parencite{haivision_2025_srtdocsreadmemd}. Weiterhin könnte HTTP/3 zum Einsatz kommen,
-welches auf dem UDP-basierten QUIC-Protokoll basiert und Verbindungsaufbauzeiten sowie Latenzen gegenüber klassischen TCP-Verbindungen deutlich reduziert \parencite{_2021_was, iyengar_2021_rfc, litespeedtech_2026_github}.\newline  
+welches auf dem UDP-basierten \textit{QUIC}-Protokoll basiert und Verbindungsaufbauzeiten sowie Latenzen gegenüber klassischen TCP-Verbindungen deutlich reduziert \parencite{_2021_was, iyengar_2021_rfc, litespeedtech_2026_github}.\newline  
 
 Trotz dieser Eigenschaften weisen Streaming-Protokolle für den spezifischen Anwendungsfall der asynchronen Speicherung von Kameraaufzeichnungen entscheidende Nachteile auf. Protokolle wie RTMP setzen eine durchgehend stabile Verbindung 
 voraus und sind auf die sofortige Auslieferung an Endgeräte optimiert, nicht aber auf eine effiziente Dateispeicherung \parencite{skavish_2022_ein}. Die Segmentierung bei HLS oder die 
