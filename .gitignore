@@ -12,6 +12,8 @@
 *.aux
 *.fls
 *.out
+*.xml
+*.gz
 
 t3_3000.synctex.gz
 t3_3000.synctex
