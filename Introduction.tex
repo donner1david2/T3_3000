@@ -3,18 +3,18 @@
 \section{Einleitung}
 
 Das E-Dart Gerät \textit{LÖWEN DART HB10} stellt ein System dar, das bereits umfangreiche Funktionen für den Spielbetrieb bietet \parencite{lwenentertainment_2026_lwen}. Hierzu zählen neben dem Angebot verschiedener Dart-Spiele die Erfassung von Spielerstatistiken, 
-die Bereitstellung von Daten über eine mobile Applikation sowie ein Verwaltungsportal für Aufsteller. Ein zentraler Aspekt des aktuellen Betriebs sind die \textit{3K}-Turniere, bei denen alle Teilnehmer zeitgleich an demselben Gerät agieren 
-und die Spielergebnisse direkt nach Abschluss der Partie übertragen werden.\newline
+die Bereitstellung von Daten über eine mobile Applikation sowie ein Verwaltungsportal für Aufsteller. Ein zentraler Aspekt des aktuellen Betriebs sind die vernetzte Turniere, bei denen alle Teilnehmer zeitgleich an demselben Gerät agieren 
+und die Spielergebnisse direkt nach Abschluss der Partie an einen Server übertragen werden.\newline
 
 In Zukunft soll dieses System um asynchrone Turnierformate und Ranglisten ergänzt werden, bei denen die Möglichkeit besteht, Preisgelder zu gewinnen. Im Gegensatz zu den bestehenden Formaten ist hierbei keine gleichzeitige Anwesenheit der Spieler erforderlich. 
-Da die Wettbewerbe ortsungebunden durchgeführt werden können, ist eine visuelle Überprüfung der sportlichen Integrität erforderlich. Um Manipulationen am Spielausgang zu verhindern, wird eine Funktion zur Videoaufnahme der Spieler sowie der Dartscheibe benötigt. 
-Da diese Kamerasysteme bisher nicht installiert sind, müssen geeignete Wege zur Integration gefunden werden, um die Aufnahmen zur Validierung an einen zentralen Server zu senden.\newline
+Da die Wettbewerbe ortsungebunden durchgeführt werden können, ist eine spätere visuelle Überprüfung der sportlichen Integrität erforderlich. Um Manipulationen am Spielausgang zu verhindern, wird eine Funktion zur Videoaufnahme der Spieler sowie der Dartscheibe benötigt. 
+Da diese Kamerasysteme bisher nicht benötigt wurden, müssen geeignete Wege zur Integration gefunden werden, um die Aufnahmen zur Validierung an einen zentralen Server zu senden.\newline
 
 Ziel dieser Arbeit ist die Untersuchung effizienter Methoden zur Implementierung dieser Videofunktionalität auf dem HB10. 
-Der Fokus liegt hierbei auf einem ressourcenschonenden Zugriff auf die Aufnahmen der Kameras sowie einer performanten Kompression zur Entlastung von Prozessor und 
-Arbeitsspeicher während der Verarbeitung. Des Weiteren wird untersucht, inwieweit simple Algorithmen zur automatisierten Erkennung von Manipulationsversuchen, wie die Entfernung des Spielers zur Scheibe,
-in das System integriert werden können. Ein zentraler Aspekt der Untersuchung betrifft die Optimierung der Videoübertragung an einen Server. 
-Hierbei werden Verfahren evaluiert, die sowohl die benötigte Bandbreite als auch die CPU-Auslastung des Servers minimieren, um einen ökonomischen und stabilen Betrieb sicher zu stellen.
+Der Fokus liegt hierbei auf einem ressourcenschonenden Zugriff auf die Aufnahmen der Kameras sowie einer performanten Kompression zur bei möglichst geringer Belastung von Prozessor und 
+Arbeitsspeicher während der Verarbeitung. Des Weiteren wird untersucht, inwieweit simple Algorithmen zur automatisierten Erkennung von Manipulationsversuchen, wie beispielsweise einer zu kleinen Entfernung des Spielers zur Scheibe,
+in das System integriert werden können. Ein zusätzlicher Aspekt der Untersuchung betrifft die Optimierung der Videoübertragung an einen Server. 
+Hierbei werden Verfahren evaluiert, die sowohl die benötigte Bandbreite als auch die CPU-Auslastung des Servers minimieren, um einen ökonomischen und stabilen Betrieb sicherzustellen.
 
 \vspace{1em}
 

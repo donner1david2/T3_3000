@@ -21,9 +21,10 @@ sich das Protokoll SRT an, da es darauf ausgelegt ist, Videodaten sicher und mit
 welches auf dem UDP-basierten \textit{QUIC}-Protokoll basiert und Verbindungsaufbauzeiten sowie Latenzen gegenüber klassischen TCP-Verbindungen deutlich reduziert \parencite{_2021_was, iyengar_2021_rfc, litespeedtech_2026_github}.\newline  
 
 Trotz dieser Eigenschaften weisen Streaming-Protokolle für den spezifischen Anwendungsfall der asynchronen Speicherung von Kameraaufzeichnungen entscheidende Nachteile auf. Protokolle wie RTMP setzen eine durchgehend stabile Verbindung 
-voraus und sind auf die sofortige Auslieferung an Endgeräte optimiert, nicht aber auf eine effiziente Dateispeicherung \parencite{skavish_2022_ein}. Die Segmentierung bei HLS oder die 
+voraus und sind auf die sofortige Auslieferung (Live-Streaming) an Endgeräte optimiert, nicht aber auf eine effiziente Dateispeicherung \parencite{skavish_2022_ein}. Die Segmentierung bei HLS oder die 
 zusätzliche Logik zur Fehlerkorrektur bei SRT verursachen zusätzlichen Overhead. Wenn das primäre Ziel darin besteht, ein komprimiertes Video bandbreiten- und ressourcenschonend an einen Server zu übertragen, 
-verbrauchen diese Protokolle unnötig CPU-Kapazitäten sowohl auf dem sendenden System als auch auf dem Server. Für die reine Archivierung von Dateien bieten dateibasierte Übertragungsprotokolle eine deutlich ressourceneffizientere Alternative. 
+verbrauchen diese Protokolle unnötig CPU-Kapazitäten sowohl auf dem sendenden System als auch auf dem Server. Die genanten Protokolle könnten verwendet werden, um die gespeicherten Videos an den Endanwender zu senden, 
+für die reine Archivierung von Dateien bieten jedoch dateibasierte Übertragungsprotokolle eine deutlich ressourceneffizientere Alternative. 
 
 \subsection{Dateibasierte Übertragungsverfahren}
 

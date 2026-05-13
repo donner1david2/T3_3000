@@ -1,8 +1,8 @@
 % !TeX root = t3_3000.tex
 
-\begin{figure*}[t]
+\begin{figure*}[!b]
     \centering
-    \includesvg{Images/Ringbuffer.svg}
+    \includesvg[width=\textwidth]{Images/Ringbuffer.svg}
     \caption{Das Diagramm zeigt, wie die Videodaten von der Videoquelle (Kamera) zum Endpunkt (Server) verlaufen könnten: Es werden die Videodaten der Kamera in dem rohen Format YUYV an den HB10 weitergegeben, 
              welcher immer etwa 3 Sekunden dieser Daten in einem Ringbuffer speichert. Bei einem Treffer mit dem Dart (Trigger) werden die Daten zunächst verarbeitet und anschließend komprimiert.
              Schließlich sendet der HB10 die komprimierten Videos an den Server.}
@@ -50,7 +50,7 @@ erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Impleme
 vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Des Weiteren kann FFmpeg auch für den Zugriff auf die Codecs des Grafikprozessors verwendet werden.\newline
 
 Da das verwendete Kamera Modell komprimierte Video-Formate unterstützt, besteht die Möglichkeit, diese zu verwenden. In unserem Fall möchten wir die Videos aber weiterverarbeiten, 
-deshalb empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Des Weiteren ist es vorgesehen, die Videos auf dem HB10 in einem Ringbuffer zu Speichern (s. \ref{fig:ringbuffer}). Unter der Verwendung komprimierter Video-Formate ist es aber schwierig die Ringbuffer Größe zu definieren,
+deshalb empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Des Weiteren ist es vorgesehen, die Videos auf dem HB10 in einem Ringbuffer zu Speichern (s. Abbildung \ref{fig:ringbuffer}). Unter der Verwendung komprimierter Video-Formate ist es aber schwierig die Ringbuffer Größe zu definieren,
 da jeder einzelne Frame unterschiedlich groß ist, und bei Formaten die Intra-frame-Kompression verwenden, nicht garantiert werden kann, dass zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.
 
 \subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
