@@ -35,11 +35,11 @@ Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
 Das HB10 besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera (Modell: ELP-USB3MP01H-L29) unterstützt die Video Formate MJPEG \textit{YUYV} und H.264 in verschiedenen Auflösungen und Wiederholraten,
 in Abhängigkeit der Formate.\newline
 
-Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU-Leistung beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter Video-Komprimierung durchführen kann. 
+Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU-Leistung beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter bei der durchführung von Video-Komprimierung ist. 
 Der Grafikprozessor des HB10 unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000}.\newline
 
 Die in der APU integrierte VCN-Einheit (Video Core Next) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
-wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Ubuntu kann die \textit{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
+wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Linux kann die \textit{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
 die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}.
 
 \subsection{Kamera als Videoquelle} \label{sec:camera}
@@ -49,9 +49,9 @@ Der Zugriff erfolgt unter Linux standardmäßig über die \textit{Video for Linu
 erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Implementierung effizienter zu gestalten, könnte man auf das Framework \textit{FFmpeg} zurückgegriffen \parencite{_2018_ffmpeg}. FFmpeg dient als Abstraktionsebene für V4L und 
 vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Des Weiteren kann FFmpeg auch für den Zugriff auf die codecs des Grafikprozessors verwendet werden.\newline
 
-Da das verwendete Kamera Modell komprimierte Video-Formate unterstützt, besteht die Möglichkeit, diese zu verwenden. Da wir die Videos in unserem Fall aber weiterverarbeiten möchten, 
-empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Des Weiteren ist es unter der Verwendung komprimierter Video-Formate schwierig die Ringbuffer Größe zu definieren,
-da die Größe jedes einzelnen Frames unterschiedlich ist, und man bei Formaten die Intra-frame-Kompression verwenden, nicht garantiert werden kann, das zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.
+Da das verwendete Kamera Modell komprimierte Video-Formate unterstützt, besteht die Möglichkeit, diese zu verwenden. In unserem Fall möchten wir die Videos aber weiterverarbeiten, 
+deshalb empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Des Weiteren ist es vorgesehen, die Videos auf dem HB10 in einem Ringbuffer zu Speichern (s. \ref{fig:ringbuffer}). Unter der Verwendung komprimierter Video-Formate ist es aber schwierig die Ringbuffer Größe zu definieren,
+da jeder einzelne Frame unterschiedlich groß ist, und bei Formaten die Intra-frame-Kompression verwenden, nicht garantiert werden kann, das zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.
 
 \subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
 
