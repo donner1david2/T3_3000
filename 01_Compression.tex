@@ -5,18 +5,18 @@
     \includesvg[width=\textwidth]{Images/Ringbuffer.svg}
     \caption{Das Diagramm zeigt, wie die Videodaten von der Videoquelle (Kamera) zum Endpunkt (Server) verlaufen könnten: Es werden die Videodaten der Kamera in dem rohen Format YUYV an den HB10 weitergegeben, 
              welcher immer etwa 3 Sekunden dieser Daten in einem Ringbuffer speichert. Bei einem Treffer mit dem Dart (Trigger) werden die Daten zunächst verarbeitet und anschließend komprimiert.
-             Schließlich sendet der HB10 die komprimierten Videos an den Server.}
+             Schließlich sendet der HB10 die komprimierten Videos an den Server. YUYV wurde als initiales Videoformat gewählt, da somit auf die Dekodierung der Videodaten innerhalb des HB10 verzichtet werden kann.}
     \label{fig:ringbuffer}
 \end{figure*}
 
 \section{Video- Aufnahme und Komprimierung} \label{sec:1}
 
-Die Realisierung einer stabilen Videoaufnahme für den HB10 erfordert eine performante Interaktion zwischen Hardware und Software. Da die hohen Datenraten unkomprimierter Videostreams die 
-Systemressourcen des HB10 bei gleichzeitiger Ausführung anderer Prozesse auslasten könnten, ist eine effiziente Komprimierung der Daten notwendig.\newline
+Die Realisierung einer stabilen Videoaufnahme für den HB10 erfordert eine performante Interaktion zwischen Hardware und Software. Da die hohen Datenraten unkomprimierter Videostreams eine stabile und starke Internetverbindung voraussetzen, 
+was nicht bei jedem Aufsteller eines HB10 der Fall ist, wird eine Komprimierung der Daten benötigt.\newline
 
 Zur Minimierung der Prozessorlast und des Arbeitsspeicherverbrauchs bieten sich innerhalb der Linux-Umgebung hardwaregestützte Kodierungsverfahren an. Diese verlagern die rechenintensiven Kompressionsalgorithmen vom Hauptprozessor auf 
 dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im Kontext der im HB10 eingebauten APU relevant, 
-da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügt \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Des Weiteren, ist es auch nicht nötig, den Gesamten Spielablauf aufzunehmen. 
+da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügt \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Des Weiteren, ist es auch nicht nötig, den gesamten Spielablauf aufzunehmen. 
 Es ist ausreichend, Videoausschnitte der einzelnen Würfe zu speichern. Im Folgenden werden die technischen Grundlagen des Kamerazugriffs sowie die Auswahl geeigneter Kompressionsverfahren unter Berücksichtigung der Hardwarebeschleunigung erläutert.
 
 \subsection{Video-Komprimierungsalgorithmen} \label{sec:compression}
@@ -30,17 +30,17 @@ werden oft nur die Unterschiede zum vorherigen Bild aufgezeichnet \parencite{put
 Während ein I-Frame das gesamte Bild enthält, speichern die folgenden P-Frames lediglich die Veränderungen zum vorangegangenen Bild \parencite{kalva_the}. Dieses
 Vorgehen reduziert die Datenmenge sowie die benötigte Bandbreite erheblich.
 
-\subsection{hardwaregestützte Komprimierung} \label{sec:hwComp}
+\subsection{Hardwaregestützte Komprimierung} \label{sec:hwComp}
 
 Das HB10 besitzt einen AMD Ryzen Embedded R1000 Prozessor als APU und ist ein Linux-basiertes System. Die vorgesehene Kamera (Modell: ELP-USB3MP01H-L29) unterstützt die Video Formate MJPEG \textit{YUYV} und H.264 in verschiedenen Auflösungen und Wiederholraten,
 in Abhängigkeit der Formate.\newline
 
-Da die Videofunktion neben dem eigentlichen Spiel ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU-Leistung beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter bei der Durchführung von Video-Komprimierung ist. 
-Der Grafikprozessor des HB10 unterstützt die VCN Engine von AMD  \parencite{_2025_amd,_r1000}.\newline
+Da die Videofunktion im Hintergrund des eigentlichen Spiels ablaufen soll, darf die Komprimierung nur einen kleinen Teil der CPU-Leistung beanspruchen. Dazu kann man den Grafikprozessors verwenden, da dieser deutlich effizienter bei der Durchführung von Video-Komprimierung ist. 
+Der Grafikprozessor des HB10 unterstützt die \textit{Video Core Next} (VCN) Engine von AMD  \parencite{_2025_amd,_r1000}.\newline
 
-Die in der APU integrierte VCN-Einheit (Video Core Next) stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
-wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Linux kann die \textit{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es Anwendungen wie FFmpeg, 
-die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren \parencite{_2026_ffmpeg}.
+Die in der APU integrierte VCN-Einheit stellt dedizierte Hardware-Encoder für Formate wie H.264 bereit, wodurch die Rechenlast von den CPU-Kernen auf spezialisierte Hardwarekomponenten verlagert 
+wird \parencite{_r1000, _2025_amd}. Für die Umsetzung unter Linux kann die \textit{Video Acceleration API} (VA-API) als Schnittstelle genutzt werden \parencite{_2026_ffmpeg}. Diese erlaubt es, 
+die Hardwarebeschleunigung der APU direkt anzusprechen, um Videoströme mit minimalem Ressourcenverbrauch zu kodieren.
 
 \subsection{Kamera als Videoquelle} \label{sec:camera}
 
@@ -50,29 +50,23 @@ erfordert jedoch eine komplexe Handhabung der Puffer und Formate. Um die Impleme
 vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. Des Weiteren kann FFmpeg auch für den Zugriff auf die Codecs des Grafikprozessors verwendet werden.\newline
 
 Da das verwendete Kamera Modell komprimierte Video-Formate unterstützt, besteht die Möglichkeit, diese zu verwenden. In unserem Fall möchten wir die Videos aber weiterverarbeiten, 
-deshalb empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Des Weiteren ist es vorgesehen, die Videos auf dem HB10 in einem Ringbuffer zu Speichern (s. Abbildung \ref{fig:ringbuffer}). Unter der Verwendung komprimierter Video-Formate ist es aber schwierig die Ringbuffer Größe zu definieren,
+deshalb empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Des Weiteren ist es vorgesehen, die Videos auf dem HB10 in einem Ringbuffer zu Speichern (siehe Abbildung \ref{fig:ringbuffer}). Unter der Verwendung komprimierter Video-Formate ist es aber schwierig die Ringbuffer Größe zu definieren,
 da jeder einzelne Frame unterschiedlich groß ist, und bei Formaten die Intra-frame-Kompression verwenden, nicht garantiert werden kann, dass zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.
+
+Das Kamera-Modell, dass eingebaut werden soll unterstützt als unkomprimiertes Format das YUYV-Pixelformat, dieses kann also für die Verarbeitung innerhalb des HB10 verwendet werden, für die Übertragung an den Server sollte ein komprimiertes Format gewählt werden.
 
 \subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
 
-Die Auswahl eines geeigneten Kompressionsverfahrens für jeweils die Verarbeitung und Übertragung an den Server, ist entscheidend für die Balance zwischen der Auslastung lokaler Ressourcen und der benötigten Netzwerkbandbreite. Da das verwendete Kamera-Modell YUYV, MJPEG und H.264 unterstützt, 
-ergeben sich unterschiedliche Szenarien für die Vorverarbeitung und den Transfer \parencite{_2020_part}.\newline
+Die Auswahl eines geeigneten Kompressionsverfahrens für dieÜbertragung an den Server, ist entscheidend für die Balance zwischen der Auslastung lokaler Ressourcen und der benötigten Netzwerkbandbreite. Da wir ein unkomprimiertes Videoformat für die Verarbeitung auf dem HB10 verwenden, 
+spielen die restlichen Formate der Kamera keine Rolle, sondern entscheidend ist, welche Formate von dem Grafikprozessor kodiert werden können. Der Grafikprozessor des HB10 unterstützt die Komprimierung in die Formate H.264 und H.265.\newline
 
-MJPEG basiert auf der Intra-Frame-Komprimierung, bei der jedes Frame unabhängig von anderen Bildern verarbeitet wird \parencite{pearson_an}. Dies führt zu einer sehr geringen Rechenlast beim Kodieren und Dekodieren, 
-resultiert jedoch in einer hohen Datenrate, da keine zeitlichen Redundanzen zwischen den Bildern genutzt werden (Inter-Frame-Komprimierung) \parencite{pearson_an}. Für die Anwendung von Algorithmen zur Objekterkennung bietet MJPEG den Vorteil, 
-dass Einzelbilder ohne aufwendige Rekonstruktion eines Video-Streams direkt aus dem Datenstrom extrahiert werden können.\newline
-
-Im Gegensatz dazu nutzen H.264 und H.265 die Inter-Frame-Kompression, um Redundanzen über die Zeit hinweg zu reduzieren \parencite{putra_2023_interframe}. H.264 bietet eine weitreichende Kompatibilität und eine 
-effiziente Reduktion der Dateigröße im Vergleich zu MJPEG \parencite{kalva_the}. Da die Hardware des Typs AMD Ryzen Embedded R1000 über dedizierte Einheiten für das Video-Encoding verfügt, könnte die Kompression 
-mittels VA-API oder der AMF-Schnittstelle direkt auf die GPU ausgelagert werden \parencite{_2026_ffmpeg, gpuopenlibrariessdks_2025_amf_video_encode_api}. Dies schont die CPU-Ressourcen und den Arbeitsspeicher während des Betriebs \parencite{_2025_amd}.\newline
+H.264 und H.265 nutzen die Inter-Frame-Kompression, um Redundanzen über die Zeit hinweg zu reduzieren \parencite{putra_2023_interframe}. H.264 bietet eine weitreichende Kompatibilität und eine 
+effiziente Reduktion der Dateigröße\parencite{kalva_the}. Da die Hardware des Typs AMD Ryzen Embedded R1000 dieses Format unterstützt, könnte die Kompression 
+mittels VA-APIdirekt auf die GPU ausgelagert werden \parencite{_2026_ffmpeg, gpuopenlibrariessdks_2025_amf_video_encode_api}. Dies schont die CPU-Ressourcen und den Arbeitsspeicher während des Betriebs \parencite{_2025_amd}.\newline
 
 H.265 erreicht bei gleicher visueller Qualität eine noch stärkere Kompression als H.264, was die benötigte Bandbreite für die Übertragung an einen Server weiter minimiert \parencite{putra_2023_interframe}. Allerdings ist 
 die algorithmische Komplexität von H.265 deutlich höher. Dieses Format ist sinnvoll, wenn die Einsparung von Speicherplatz und Rechenleistung auf dem Server und die Reduktion der Übertragungskosten Vorrang vor der minimalen Latenz auf dem lokalen Gerät haben.\newline
 
-Neben den komprimierten Formaten bietet das YUYV-Pixelformat eine unkomprimierte Alternative für den Zugriff auf Kameradaten \parencite{_2020_part}. Ein wesentlicher Vorteil dieses Formats liegt darin, dass die Einzelbilder für die weitere Verarbeitung 
-nicht erst dekodiert werden müssen, was lokale Rechenressourcen entlastet. Zudem ist jeder Frame innerhalb des Datenstroms exakt gleich groß, was die Berechnung der benötigten Ringbuffer-Größe für spezifische Videolängen vereinfacht. 
-Demgegenüber steht jedoch der Nachteil eines hohen Speicherbedarfs, da keinerlei Reduzierung der Datenmenge stattfindet.\newline
-
-Für die Übertragung an den Server bietet sich H.265 an, da es die benötigte Bandbreite im Vergleich zu den anderen Formaten am besten reduziert. Für die Verarbeitung auf dem HB10 im Gegensatz erscheint YUYV am sinnvollsten, da durch dessen Verwendung die häufige Dekomprimierung entfällt.
+Für die Übertragung an den Server bietet sich H.265 an, da es die benötigte Bandbreite im Vergleich zu den anderen Formaten am besten reduziert.
 
 \vspace{1em}

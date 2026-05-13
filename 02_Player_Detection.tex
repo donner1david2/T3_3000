@@ -5,7 +5,7 @@
 Da wir die Videos für die händische Überprüfung der Spiele aufnehmen, bietet es sich an, diese Videos im Vorhinein maschinell zu überprüfen und \enquote{verdächtige} Spiele zu markieren. Dabei kann mittels Objekterkennung 
 die Position des Spielers festgestellt werden. Mit der Position kann anschließend geprüft werden, ob der Spieler hinter der Abwurflinie steht. Des Weiteren könnte alles abgesehen vom Spieler ausgeblendet werden, 
 um möglichen Datenschutzverletzungen durch das Aufnehmen von sich im Hintergrund befindenden Personen vorzubeugen. Es besteht auch die Möglichkeit, alles außer dem Spieler abzuschneiden, somit müsste man eine kleinere Datenmenge übertragen und könnte Bandbreite sparen.
-Durch die Lokalisierung des Spielers im Kamerabild kann theoretisch mathematisch geprüft werden, ob die Distanz zum Dart-Gerät in etwa den Regeln entspricht, solange sichergestellt werden kann, in welchem Winkel die Kamera zum Boden steht. 
+Durch die Lokalisierung des Spielers im Kamerabild kann theoretisch mathematisch geprüft werden, ob die Distanz zum Dart-Gerät den Regeln entspricht, solange sichergestellt werden kann, in welchem Winkel die Kamera zum Boden steht. 
 Um den Anforderungen an eine geringe CPU- und Arbeitsspeicherauslastung auf der Zielhardware gerecht zu werden, müssen die untersuchten Verfahren allerdings eine niedrige algorithmische Komplexität aufweisen.\newline
 
 \subsection{Methodenvergleich zur effizienten Objekterkennung am Dart-Gerät}
@@ -13,14 +13,14 @@ Um den Anforderungen an eine geringe CPU- und Arbeitsspeicherauslastung auf der 
 Die Auswahl eines geeigneten Algorithmus zur Erkennung von Spielern erfordert eine Abwägung zwischen der verfügbaren Rechenleistung und der benötigten Präzision. Im Folgenden werden die Verfahren Viola-Jones, 
 HOG-SVM und Deformable Part Models hinsichtlich ihrer Eignung für den Einsatz an einem Dart-Gerät gegenübergestellt.\newline
 
-Der Viola-Jones-Algorithmus stellt eine besonders ressourcensparende Methode dar, da er auf \textit{Haar-like features} und dem Prinzip der Kaskaden-Klassifizierung basiert \parencite{d_2022_computer}. Die Berechnung erfolgt sehr effizient, 
-was eine Objekterkennung in Echtzeit ermöglicht, auch wenn die CPU-Leistung begrenzt ist \parencite{d_2022_computer}. In Bezug auf die Genauigkeit stößt das Verfahren jedoch bei Objekten, die keine starre Struktur aufweisen oder deren 
+Der Viola-Jones-Algorithmus stellt eine besonders ressourcensparende Methode dar, da er auf \textit{Haar-like features} und dem Prinzip der Kaskaden-Klassifizierung basiert \parencite{ipol.2014.104}. Die Berechnung erfolgt sehr effizient, 
+was eine Objekterkennung in Echtzeit ermöglicht, auch wenn die CPU-Leistung begrenzt ist \parencite{ipol.2014.104}. In Bezug auf die Genauigkeit stößt das Verfahren jedoch bei Objekten, die keine starre Struktur aufweisen oder deren 
 Erscheinungsbild durch unterschiedliche Kleidung und Posen der Spieler stark variiert, an Grenzen. Der Algorithmus eignet sich beispielsweise gut für Gesichtserkennung, ist  für diesen Anwendungsfall jedoch wahrscheinlich zu ungenau.\newline
 
 Ein verbreiteter Standard für die Personenerkennung ist die Nutzung von \textit{Histogram of Oriented Gradients} (HOG) in Kombination mit \textit{Support Vector Machines} (SVM). Die HOG-Methode extrahiert Merkmale, 
 indem sie die Verteilung von Helligkeitskanten in einzelnen Bildbereichen analysiert \parencite{tam_2023_extracting}. Die Klassifizierung mittels SVM weist eine Komplexität auf, die maßgeblich von der Anzahl der Merkmale und der Anzahl der Support-Vektoren 
 bestimmt wird \parencite{_14}. Während dieses Verfahren eine deutlich höhere Robustheit gegenüber Formveränderungen des Spielers bietet als Viola-Jones, steigt die Rechenintensität durch die notwendige Berechnung der Gradientenfelder und die 
-Normalisierung der Blöcke an \parencite{tam_2023_how}. Für das Einbinden eines trainierten SVM-Modells könnte OpenCV verwendet werden. Die Bibliothek unterstützt das Anwenden eines SVM-Modells auf einzelne Frames.\newline
+Normalisierung der Blöcke an \parencite{tam_2023_how}. Für das Einbinden eines trainierten SVM-Modells könnte OpenCV \parencite{opencv_library} verwendet werden. Die Bibliothek unterstützt das Anwenden des SVM-Modells auf einzelne Frames.\newline
 
 Für eine noch präzisere Analyse können \textit{Deformable Part Models} (DPM) eingesetzt werden. Diese erweitern den HOG-basierten Ansatz, indem sie das Zielobjekt in einzelne, flexible Teile zerlegen \parencite{girshick_deformable}. Dies erlaubt eine sehr genaue 
 Erkennung von Spielern, selbst wenn Körperteile teilweise verdeckt sind oder extreme Posen eingenommen werden \parencite{girshick_deformable}. Dieser Zuwachs an Genauigkeit geht jedoch mit einer massiv erhöhten Rechenintensität bei der Ausführung einher, 
@@ -33,11 +33,11 @@ Spielererkennung unter realen Bedingungen bietet die Kombination aus HOG und SVM
 
 Da die Videos theoretisch maschinell überprüft werden könnten, wäre ein interessanter Punkt, den man untersuchen könnte, die Entfernung des Spielers zur Dartscheibe.
 Dabei kann, um eine effiziente Verarbeitung zu gewährleisten, die räumliche Position eines Spielers durch eine geometrische Analyse der Bounding-Box in Relation zur Kameraposition errechnet werden.  
-Hierbei wird die vertikale Position der Unterkante der Bounding-Box als Indikator für die Nähe zum Dart-Gerät verwendet. Diese Methode ist nur möglich, solange der genaue Winkel der Kamera bekannt ist.
+Hierbei wird die vertikale Position der Unterkante der Bounding-Box als Indikator für die Nähe zum Dart-Gerät verwendet. Diese Methode ist nur möglich, solange der genaue Kamerawinkel zum Boden bekannt ist.
 Andernfalls können bereits kleine Abweichungen zu signifikanten Ungenauigkeiten in der Berechnung führen.\newline
 
-Um die Entfernung zu berechnen, stehen uns Informationen zu der Kamera Höhe, dem Kamera Winkel zum Boden, dem Bildwinkel der Kamera und der Bildhöhe in Pixeln zur Verfügung. Dabei ist vorausgesetzt, dass ein Sensor
-existiert, der den Winkel der Kamera liefert, oder diese in 100 Prozent der Fälle in einem exakten vordefinierten Winkel installiert werden kann. Die Position der Füße eines Spielers kann mithilfe von Objekterkennungs-Algorithmen
+Um die Entfernung zu berechnen, stehen uns Informationen zu der Kamera Höhe, dem Kamerawinkel, dem Bildwinkel der Kamera und der Bildhöhe in Pixeln zur Verfügung. Dabei ist vorausgesetzt, dass ein Sensor
+existiert, der den Kamerawinkel liefert, oder diese in 100 Prozent der Fälle in einem exakten vordefinierten Winkel installiert werden kann. Die Position der Füße eines Spielers kann mithilfe von Objekterkennungs-Algorithmen
 erkannt werden. Dazu werden im vorherigen Kapitel angesprochene Algorithmen verwendet, um einen Spieler zu lokalisieren, und eine Bounding-Box um diesen zu platzieren. Im Anschluss liefert uns die Unterkante der Bounding-Box
 die Position der Füße des Spielers im Video. Diese Parameter sind ausreichend, um die Entfernung des Spielers zum Dart zu berechnen \parencite{joglekar_2011_depth}, und ermöglichen uns zu überprüfen, ob ein Spieler \enquote{zu nah} an der Dart-Scheibe steht.
 Videos, in denen die Entfernung des Spielers zu der Dartscheibe des HB10 einen bestimmten Schwellenwert unterschreitet, können als \enquote{verdächtig} markiert werden.
