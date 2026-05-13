@@ -21,8 +21,8 @@ sich das Protokoll SRT an, da es darauf ausgelegt ist, Videodaten sicher und mit
 welches auf dem UDP-basierten QUIC-Protokoll basiert und Verbindungsaufbauzeiten sowie Latenzen gegenüber klassischen TCP-Verbindungen deutlich reduziert \parencite{_2021_was, iyengar_2021_rfc, litespeedtech_2026_github}.\newline  
 
 Trotz dieser Eigenschaften weisen Streaming-Protokolle für den spezifischen Anwendungsfall der asynchronen Speicherung von Kameraaufzeichnungen entscheidende Nachteile auf. Protokolle wie RTMP setzen eine durchgehend stabile Verbindung 
-voraus \parencite{_2023_was} und sind auf die sofortige Auslieferung an Endgeräte optimiert, nicht aber auf eine effiziente Dateispeicherung \parencite{skavish_2022_ein}. Die Segmentierung bei HLS \parencite{_2026_eigener} oder die 
-zusätzliche Logik zur Fehlerkorrektur bei SRT \parencite{haivision_2025_srtdocsreadmemd} verursachen zusätzlichen Overhead. Wenn das primäre Ziel darin besteht, ein komprimiertes Video bandbreiten- und ressourcenschonend an einen Server zu übertragen, 
+voraus und sind auf die sofortige Auslieferung an Endgeräte optimiert, nicht aber auf eine effiziente Dateispeicherung \parencite{skavish_2022_ein}. Die Segmentierung bei HLS oder die 
+zusätzliche Logik zur Fehlerkorrektur bei SRT verursachen zusätzlichen Overhead. Wenn das primäre Ziel darin besteht, ein komprimiertes Video bandbreiten- und ressourcenschonend an einen Server zu übertragen, 
 verbrauchen diese Protokolle unnötig CPU-Kapazitäten sowohl auf dem sendenden System als auch auf dem Server. Für die reine Archivierung von Dateien bieten dateibasierte Übertragungsprotokolle eine deutlich ressourceneffizientere Alternative. 
 
 \subsection{Dateibasierte Übertragungsverfahren}
@@ -39,4 +39,4 @@ Dieser Standard wird für Datei-Uploads verwendet und lässt sich ressourcenscho
 
 Als finales Zielsystem für die Datenspeicherung auf Serverseite könnte Object-Storage infrage kommen \parencite{_what}. Im Gegensatz zu klassischen, hierarchischen Dateisystemen werden Daten in diesem Ansatz als Objekte 
 mit zugehörigen Metadaten in einem flachen Adressraum abgelegt \parencite{susnjara_2025_object, _2025_what}. Dies erweist sich bei der Archivierung von großen Mengen an unstrukturierten Daten, wie es bei Videodateien der Fall ist, 
-als hochgradig skalierbar \parencite{susnjara_2025_object}. Die Übertragung an einen Objekt-Storage Server erfolgt in der Regel direkt über standardisierte HTTP-APIs, wodurch zusätzliche serverseitige Umwege über Dateisystem-Mounts entfallen könnten.
+als hochgradig skalierbar \parencite{susnjara_2025_object}. Die Übertragung an einen Object-Storage Server erfolgt in der Regel direkt über standardisierte HTTP-APIs, wodurch zusätzliche serverseitige Umwege über Dateisystem-Mounts entfallen könnten.
