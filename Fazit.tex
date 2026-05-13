@@ -2,10 +2,13 @@
 
 \section{Schlussbetrachtung}
 
-Die Arbeit hat einen Überblick gegeben, mit Welchen Methoden die Integration von Kameras für die Überprüfung der sportlichen Integrität realisiert werden könnte. Eine Plausible Implementierung könnte beispielsweise wie Folgt aufgebaut sein.
+Die Arbeit hat einen Überblick gegeben, mit welchen Methoden die Integration von Kameras in den HB10 für die Überprüfung der sportlichen Integrität bei online Wettbewerben realisiert werden könnte. Eine zielführende Implementierung könnte beispielsweise wie Folgt aufgebaut sein.
 
-Ein direkter Zugriff auf die Kameras wäre mittels \textit{ffmpeg} möglich. Um CPU und RAM zu entlasten, bietet sich die hardwarebeschleunigte Kodierung über die\textit{VA-API} an, welche speziell auf Hardware wie der 
-AMD Ryzen R1000 Serie effizient operiert. Für die Detektion von Spielern stellen HOG in Verbindung mit SVMs einen bewährten, rechenarmen Ansatz dar. 
-Die anschließende Übertragung an einen Server kann mittels Übertragung über REST-Schnittstellen an einen Object-Storage Server realisiert werden.
+Man könnte direkt auf die Kamera zugreifen, um ein unkomprimiertes Videoformat zu erhalten, welche für die weiterverarbeitung auf dem HB10 geeignet sind.
+Für die Detektion von Spielern stellen HOG in Verbindung mit SVMs einen bewährten, rechenarmen Ansatz dar. 
+
+Um CPU und RAM zu entlasten, bietet sich die hardwarebeschleunigte Kodierung über die\textit{VA-API} an, welche speziell auf Hardware wie der 
+AMD Ryzen R1000 Serie effizient operiert.
+Die anschließende Übertragung der komprimierten Videodaten an einen Server könnte mittels Übertragung über REST-Schnittstellen an einen Object-Storage Server realisiert werden.
 
 \vspace{1em}

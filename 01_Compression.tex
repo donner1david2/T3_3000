@@ -12,12 +12,12 @@
 \section{Video- Aufnahme und Komprimierung} \label{sec:1}
 
 Die Realisierung einer stabilen Videoaufnahme für den HB10 erfordert eine performante Interaktion zwischen Hardware und Software. Da die hohen Datenraten unkomprimierter Videostreams eine stabile und starke Internetverbindung voraussetzen, 
-was nicht bei jedem Aufsteller eines HB10 der Fall ist, wird eine Komprimierung der Daten benötigt.\newline
+was nicht bei jedem Aufsteller des HB10 der Fall ist, wird eine Komprimierung der Daten benötigt.\newline
 
 Zur Minimierung der Prozessorlast und des Arbeitsspeicherverbrauchs bieten sich innerhalb der Linux-Umgebung hardwaregestützte Kodierungsverfahren an. Diese verlagern die rechenintensiven Kompressionsalgorithmen vom Hauptprozessor auf 
 dedizierte Hardwareeinheiten \parencite{_2026_ffmpeg}. Dies ist insbesondere im Kontext der im HB10 eingebauten APU relevant, 
-da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügt \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Des Weiteren, ist es auch nicht nötig, den gesamten Spielablauf aufzunehmen. 
-Es ist ausreichend, Videoausschnitte der einzelnen Würfe zu speichern. Im Folgenden werden die technischen Grundlagen des Kamerazugriffs sowie die Auswahl geeigneter Kompressionsverfahren unter Berücksichtigung der Hardwarebeschleunigung erläutert.
+da diese über spezielle Funktionen zur beschleunigten Videoverarbeitung verfügt \parencite{_r1000, gpuopenlibrariessdks_2025_amf_video_encode_api}. Des Weiteren, ist es auch nicht nötig, den gesamten Spielablauf aufzunehmen, 
+es ist ausreichend, Videoausschnitte der einzelnen Würfe zu speichern. Im Folgenden werden die technischen Grundlagen des Kamerazugriffs sowie die Auswahl geeigneter Kompressionsverfahren unter Berücksichtigung der Hardwarebeschleunigung erläutert.
 
 \subsection{Video-Komprimierungsalgorithmen} \label{sec:compression}
 
@@ -51,13 +51,13 @@ vereinfacht den Prozess der Videoaufnahme erheblich \parencite{_documentation}. 
 
 Da das verwendete Kamera Modell komprimierte Video-Formate unterstützt, besteht die Möglichkeit, diese zu verwenden. In unserem Fall möchten wir die Videos aber weiterverarbeiten, 
 deshalb empfiehlt sich die Verwendung unkomprimierter Formate, um den Rechenaufwand für eine Dekomprimierung zu vermeiden. Des Weiteren ist es vorgesehen, die Videos auf dem HB10 in einem Ringbuffer zu Speichern (siehe Abbildung \ref{fig:ringbuffer}). Unter der Verwendung komprimierter Video-Formate ist es aber schwierig die Ringbuffer Größe zu definieren,
-da jeder einzelne Frame unterschiedlich groß ist, und bei Formaten die Intra-frame-Kompression verwenden, nicht garantiert werden kann, dass zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.
+da jeder einzelne Frame unterschiedlich groß ist, und bei Formaten die Intra-frame-Kompression verwenden, nicht garantiert werden kann, dass zu jeden Zeitpunkt ein vollständiger I-Frame im Buffer enthalten ist.\newline
 
 Das Kamera-Modell, dass eingebaut werden soll unterstützt als unkomprimiertes Format das YUYV-Pixelformat, dieses kann also für die Verarbeitung innerhalb des HB10 verwendet werden, für die Übertragung an den Server sollte ein komprimiertes Format gewählt werden.
 
 \subsection{Analyse der Kompressionsverfahren MJPEG, H.264 und H.265}
 
-Die Auswahl eines geeigneten Kompressionsverfahrens für dieÜbertragung an den Server, ist entscheidend für die Balance zwischen der Auslastung lokaler Ressourcen und der benötigten Netzwerkbandbreite. Da wir ein unkomprimiertes Videoformat für die Verarbeitung auf dem HB10 verwenden, 
+Die Auswahl eines geeigneten Kompressionsverfahrens für die Übertragung an den Server, ist entscheidend für die Balance zwischen der Auslastung lokaler Ressourcen und der benötigten Netzwerkbandbreite. Da wir ein unkomprimiertes Videoformat für die Verarbeitung auf dem HB10 verwenden, 
 spielen die restlichen Formate der Kamera keine Rolle, sondern entscheidend ist, welche Formate von dem Grafikprozessor kodiert werden können. Der Grafikprozessor des HB10 unterstützt die Komprimierung in die Formate H.264 und H.265.\newline
 
 H.264 und H.265 nutzen die Inter-Frame-Kompression, um Redundanzen über die Zeit hinweg zu reduzieren \parencite{putra_2023_interframe}. H.264 bietet eine weitreichende Kompatibilität und eine 
@@ -67,6 +67,6 @@ mittels VA-APIdirekt auf die GPU ausgelagert werden \parencite{_2026_ffmpeg, gpu
 H.265 erreicht bei gleicher visueller Qualität eine noch stärkere Kompression als H.264, was die benötigte Bandbreite für die Übertragung an einen Server weiter minimiert \parencite{putra_2023_interframe}. Allerdings ist 
 die algorithmische Komplexität von H.265 deutlich höher. Dieses Format ist sinnvoll, wenn die Einsparung von Speicherplatz und Rechenleistung auf dem Server und die Reduktion der Übertragungskosten Vorrang vor der minimalen Latenz auf dem lokalen Gerät haben.\newline
 
-Für die Übertragung an den Server bietet sich H.265 an, da es die benötigte Bandbreite im Vergleich zu den anderen Formaten am besten reduziert.
+Für die Übertragung an den Server bietet sich also H.265 an, da es die benötigte Bandbreite im Vergleich zu den anderen Formaten am besten reduziert.
 
 \vspace{1em}
